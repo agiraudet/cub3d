@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/09 20:57:41 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/10 02:36:18 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/10 02:46:51 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 # include "mlx_utils.h"
 # include <math.h>
 # include <mlx.h>
-# include "X.h"
 
 # define ROT_SPEED 5
 # define ROT_MUL 10
