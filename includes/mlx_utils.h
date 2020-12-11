@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 04:09:45 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/10 01:39:33 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/11 01:21:51 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,32 +29,32 @@
 
 typedef struct	s_view
 {
-	void	*mlx;
-	void	*win;
+	void		*mlx;
+	void		*win;
 }				t_view;
 
 typedef struct	s_point
 {
-	int		x;
-	int		y;
+	int			x;
+	int			y;
 }				t_point;
 
 typedef struct	s_rect
 {
-	int		x;
-	int		y;
-	int		wd;
-	int		hg;
+	int			x;
+	int			y;
+	int			wd;
+	int			hg;
 }				t_rect;
 
-float	deg_to_rad(int angle);
-int		rgb_to_i(int a, int r, int g, int b);
-int		fix_angle(float a);
+float			deg_to_rad(int angle);
+unsigned int	rgb_to_i(int a, int r, int g, int b);
+int				fix_angle(float a);
 
-t_rect	rect_init(float x, float y, float wd, float hg);
-t_point	point_init(float x, float y);
-void	rect_draw(t_view *v, t_rect rect, int color, int outline);
-void	line_draw(t_view *v, t_point p1, t_point p2, int color);
-void	line_draw_ang(t_view *v, t_point p1, float angle, int color, int len);
+t_rect			rect_init(float x, float y, float wd, float hg);
+t_point			point_init(float x, float y);
+void			rect_draw(t_view *v, t_rect rect, int color, int outline);
+void			line_draw(t_view *v, t_point p1, t_point p2, int color);
+void			line_draw_ang(t_view *v, t_point p1, float angle, int color, int len);
 
 #endif

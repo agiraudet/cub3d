@@ -6,10 +6,11 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 04:12:59 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/10 00:32:35 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/11 01:32:35 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include "../includes/cub.h"
 
 void	map_draw2d(t_scene *sc)
@@ -61,4 +62,9 @@ void	ray_draw(t_ray *ray, t_scene *sc)
 	p1 = point_init(sc->plr.x, sc->plr.y);
 	p2 = point_init(ray->x, ray->y);
 	line_draw(&v, p1, p2, GREEN);
+}
+
+void	show_sets(t_settings *s)
+{
+	printf("win_x: %d\nwin_y: %d\nwin_label: %s\ntex_no: %s\ntex_so: %s\ntex_we: %s\ntex_ea: %s\ntex_s: %s\nclf: %u\nclc: %u\n", s->win_x, s->win_y, s->win_label, s->tex_no, s->tex_so, s->tex_we, s->tex_ea, s->tex_s, s->color_f, s->color_c);
 }

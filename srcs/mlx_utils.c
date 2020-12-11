@@ -6,20 +6,20 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 02:51:18 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/09 21:59:50 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/11 01:24:19 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
 
-float	deg_to_rad(int angle)
+float			deg_to_rad(int angle)
 {
 	return (angle * M_PI / 180);
 }
 
-int		rgb_to_i(int a, int r, int g, int b)
+unsigned int	rgb_to_i(int a, int r, int g, int b)
 {
-	int res;
+	unsigned int res;
 
 	res = 0;
 	res += b;
@@ -29,7 +29,7 @@ int		rgb_to_i(int a, int r, int g, int b)
 	return (res);
 }
 
-int		fix_angle(float a)
+int				fix_angle(float a)
 {
 	if (a > 359)
 		return (a - 360);

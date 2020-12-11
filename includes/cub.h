@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/09 20:57:41 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/10 02:46:51 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/11 11:19:45 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,12 @@
 # include <math.h>
 # include <mlx.h>
 
+# include <stdio.h>
+
 # define ROT_SPEED 5
 # define ROT_MUL 10
-# define MAX_DOF 8
-# define NB_RAY 60
+# define MAX_DOF 50
+# define NB_RAY 80
 # define RAY_OFFSET 1
 
 typedef struct	s_settings
@@ -34,8 +36,8 @@ typedef struct	s_settings
 	char		*tex_we;
 	char		*tex_ea;
 	char		*tex_s;
-	int			color_f;
-	int			color_c;
+	unsigned int	color_f;
+	unsigned int	color_c;
 }				t_settings;
 
 typedef struct	s_player
@@ -91,10 +93,12 @@ void			view_redraw(t_scene *sc);
 void			map_draw2d(t_scene *sc);
 void			player_draw2d(t_scene *sc);
 void			ray_draw(t_ray *ray, t_scene *sc);
-t_scene			*scene_init();
+t_scene			*scene_init(char *path);
+t_settings		setting_init(char *path);
 void			scene_destroy(t_scene *sc);
 void			ray_cast(t_scene *sc);
 void			wall_draw(t_scene *sc, int i, float dist, float ang, char dir);
 void			clean_view(t_scene *sc);
+void			show_sets(t_settings *s);
 
 #endif

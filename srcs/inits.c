@@ -6,19 +6,21 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/09 21:07:16 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/10 02:37:56 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/11 11:23:28 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub.h"
 
-t_settings	settings_init()
+t_settings	setting_init_dummy()
 {
 	t_settings	set;
 
 	set.win_x = 1024;
 	set.win_y = 512;
 	set.win_label = ft_strdup("TEST");
+	set.color_f = BLACK;
+	set.color_c = GRAY;
 	return (set);
 }
 
@@ -56,22 +58,25 @@ t_map		map_init()
 	return (map);
 }
 
-t_scene		*scene_init()
+t_scene		*scene_init(char *path)
 {
 	t_scene		*sc;
 
 	sc = malloc(sizeof(t_scene));
 	if (!sc)
 		return (0);
-	sc->set = settings_init();
+	if (path)
+		sc->set = setting_init(path);
+	else
+		sc->set = setting_init_dummy();
+	//show_sets(&sc->set);
 	sc->plr = player_init();
 	sc->key = keys_init();
 	sc->map = map_init();
 	sc->mlx = mlx_init();
 	sc->win = mlx_new_window(sc->mlx, sc->set.win_x, sc->set.win_y, sc->set.win_label);
-	mlx_do_key_autorepeaton(sc->mlx);
-	mlx_key_hook(sc->win, &keys_in, &sc->key);
-	mlx_loop_hook(sc->mlx, &player_move, sc);
+	//mlx_key_hook(sc->win, &keys_in, &sc->key);
+	//mlx_loop_hook(sc->mlx, &player_move, sc);
 	mlx_hook(sc->win, 2, 0, &keys_in, &sc->key);
 	mlx_hook(sc->win, 3, 0, &keys_out, &sc->key);
 

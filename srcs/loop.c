@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 03:25:08 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/10 02:35:47 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/11 11:16:49 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int		keys_in(int k, t_keys *keys)
 {
+	ft_putnbr(k);
 	if (k == 'w')
 		keys->w = 1;
 	if (k == 's')
@@ -27,6 +28,7 @@ int		keys_in(int k, t_keys *keys)
 
 int		keys_out(int k, t_keys *keys)
 {
+	ft_putnbr(k);
 	if (k == 'w')
 		keys->w = 0;
 	if (k == 's')
@@ -40,9 +42,9 @@ int		keys_out(int k, t_keys *keys)
 
 void	view_redraw(t_scene *sc)
 {
-	map_draw2d(sc);
-	player_draw2d(sc);
 	clean_view(sc);
+//	map_draw2d(sc);
+//	player_draw2d(sc);
 }
 
 int		player_move(t_scene *sc)
@@ -55,18 +57,18 @@ int		player_move(t_scene *sc)
 		sign = (sc->key.w) ? 1 : -1;
 		sc->plr.x += sc->plr.dx * sign;
 		sc->plr.y += sc->plr.dy * sign;
-		//sc->key.w = 0;
-		//sc->key.s = 0;
+		sc->key.w = 0;
+		sc->key.s = 0;
 		view_redraw(sc);
 	}
 	if (sc->key.a || sc->key.d)
 	{
-		sign = (sc->key.a) ? 1 : -1;
+		sign = (sc->key.d) ? 1 : -1;
 		sc->plr.angle = fix_angle(sc->plr.angle + ROT_SPEED * sign);
 		sc->plr.dx = cos(deg_to_rad(sc->plr.angle)) * ROT_MUL;
 		sc->plr.dy = -sin(deg_to_rad(sc->plr.angle)) * ROT_MUL;
-		//sc->key.a = 0;
-		//sc->key.d = 0;
+		sc->key.a = 0;
+		sc->key.d = 0;
 		view_redraw(sc);
 	}
 	return (1);

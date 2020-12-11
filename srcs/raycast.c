@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 00:31:06 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/10 01:41:19 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/11 10:52:43 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,13 +115,13 @@ float	ray_single_cast(t_scene *sc, float ang, char *dir)
 	dist_v = ray_dist(&ray_v, sc);
 	if ((dist_h < dist_v || dist_v == 0) && dist_h != 0)
 	{
-		ray_draw(&ray_h, sc);
+		//ray_draw(&ray_h, sc);
 		*dir = 'h';
 		return (dist_h);
 	}
 	else
 	{
-		ray_draw(&ray_v, sc);
+		//ray_draw(&ray_v, sc);
 		*dir = 'v';
 		return (dist_v);
 	}
