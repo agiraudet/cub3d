@@ -5,90 +5,136 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/09 21:07:16 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/11 11:23:28 by agiraude         ###   ########.fr       */
+/*   Created: 2020/12/13 17:43:34 by agiraude          #+#    #+#             */
+/*   Updated: 2020/12/15 12:26:31 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub.h"
+#include "../includes/cub3d.h"
 
-t_settings	setting_init_dummy()
+int		setting_init(t_scene *sc, char *path)
 {
-	t_settings	set;
-
-	set.win_x = 1024;
-	set.win_y = 512;
-	set.win_label = ft_strdup("TEST");
-	set.color_f = BLACK;
-	set.color_c = GRAY;
-	return (set);
+	sc->set.mini = MINIMAP;
+	sc->map.str = ft_strdup("");
+	sc->map.size_x = 0;
+	sc->map.size_y = 0;
+	sc->map.size_tile = 64;
+	parse_file(sc, path);
+	sc->set.proj.scale = PROJ_SCALE;
+	sc->set.proj.wd = sc->set.win_x / PROJ_SCALE;
+	sc->set.proj.hg = sc->set.win_y / PROJ_SCALE;
+	sc->set.proj.half_wd = sc->set.proj.wd / 2;
+	sc->set.proj.half_hg = sc->set.proj.hg / 2;
+	return (1);
 }
 
-t_player	player_init()
+int		buffer_init(t_scene *sc)
 {
-	t_player	plr;
+	t_tex	*buffer;
 
-	plr.x = 256;
-	plr.y = 256;
-	plr.dx = ROT_MUL;
-	plr.dy = 0;
-	plr.angle = 0;
-	return(plr);
+	buffer = &sc->img_buf;
+	buffer->ptr = mlx_new_image(sc->view.mlx, sc->set.win_x, sc->set.win_y);
+	if (!buffer->ptr)
+		return (0);
+	buffer->data = mlx_get_data_addr(buffer->ptr, &buffer->bpp, &buffer->line_len, &buffer->endian);
+	if (!buffer->data)
+	{
+		free(buffer->ptr);
+		return (0);
+	}
+	return (1);
 }
 
-t_keys		keys_init()
+int		minimap_init(t_scene *sc)
 {
-	t_keys	key;
+	int		i;
 
-	key.w = 0;
-	key.s = 0;
-	key.a = 0;
-	key.d = 0;
-	return (key);
+	sc->mini.size = MINI_SIZE;
+	sc->mini.x = MINI_X;
+	sc->mini.y = MINI_Y;
+	sc->mini.show_ray = MINI_SHOW_RAY;
+	i = 0;
+	while (sc->map.str[i])
+		if (sc->map.str[i++] != ' ')
+			sc->mini.nb_tile += 1;
+	sc->mini.tile = malloc(sizeof(t_tile) * sc->mini.nb_tile);
+	if (!sc->mini.tile)
+		return (0);
+	minimap_load(sc);
+	return (1);
 }
 
-t_map		map_init()
+int		plr_init(t_scene *sc)
 {
-	t_map	map;
-
-	map.size_x = 8;
-	map.size_y = 8;
-	map.size_tile = 64;
-	map.str = ft_strdup("1111111110100001100010011000010110000101100100011000000111111111");
-	return (map);
+	sc->plr.x = 5;
+	sc->plr.y = 5;
+	sc->plr.dx = PLR_SPEED;
+	sc->plr.dy = 0;
+	sc->plr.angle = 90;
+	sc->plr.cos = cos(deg_to_rad(sc->plr.angle)) * PLR_SPEED;
+	sc->plr.sin = sin(deg_to_rad(sc->plr.angle)) * PLR_SPEED;
+	sc->plr.fov = 60;
+	return (1);
 }
 
-t_scene		*scene_init(char *path)
+int		key_init(t_scene *sc)
 {
-	t_scene		*sc;
+	sc->key.w = 0;
+	sc->key.s = 0;
+	sc->key.a = 0;
+	sc->key.d = 0;
+	sc->key.la = 0;
+	sc->key.ra = 0;
+	return (1);
+}
+
+int		view_init(t_scene *sc)
+{
+	sc->view.mlx = mlx_init();
+	sc->view.win = mlx_new_window(sc->view.mlx, sc->set.win_x, sc->set.win_y, "cub3d");
+	return (1);
+}
+
+int		hook_init(t_scene *sc)
+{
+	mlx_loop_hook(sc->view.mlx, &player_move, sc);
+	mlx_hook(sc->view.win, 2, 1, &key_in, &sc->key);
+	mlx_hook(sc->view.win, 3, 2, &key_out, &sc->key);
+	return (1);
+}
+
+int		tex_init(t_scene *sc)
+{
+	sc->nb_tex = 4;
+	sc->texs = malloc(sizeof(t_tex) * sc->nb_tex);
+	if (!sc->texs)
+		return (0);
+	if (!tex_load(sc, TEX_NO, sc->set.tex_no))
+	{
+		free(sc->texs);
+		return (0);
+	}
+	return (1);
+}
+
+t_scene	*scene_init(char *path)
+{
+	t_scene	*sc;
 
 	sc = malloc(sizeof(t_scene));
 	if (!sc)
 		return (0);
-	if (path)
-		sc->set = setting_init(path);
-	else
-		sc->set = setting_init_dummy();
-	//show_sets(&sc->set);
-	sc->plr = player_init();
-	sc->key = keys_init();
-	sc->map = map_init();
-	sc->mlx = mlx_init();
-	sc->win = mlx_new_window(sc->mlx, sc->set.win_x, sc->set.win_y, sc->set.win_label);
-	//mlx_key_hook(sc->win, &keys_in, &sc->key);
-	//mlx_loop_hook(sc->mlx, &player_move, sc);
-	mlx_hook(sc->win, 2, 0, &keys_in, &sc->key);
-	mlx_hook(sc->win, 3, 0, &keys_out, &sc->key);
-
-	
+	setting_init(sc, path);
+	minimap_init(sc);
+	plr_init(sc);
+	key_init(sc);
+	view_init(sc);
+	hook_init(sc);
+	buffer_init(sc);
+	if (!tex_init(sc))
+	{
+		free(sc);
+		return (0);
+	}
 	return (sc);
-}
-
-void	scene_destroy(t_scene *sc)
-{
-	//mlx_destroy_window(sc->mlx, sc->win);
-	mlx_destroy_display(sc->mlx);
-	free(sc->set.win_label);
-	free(sc->map.str);
-	free(sc);
 }

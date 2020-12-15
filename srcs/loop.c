@@ -6,15 +6,14 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 03:25:08 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/11 11:16:49 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/15 13:47:50 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub.h"
+#include "../includes/cub3d.h"
 
-int		keys_in(int k, t_keys *keys)
+int		key_in(int k, t_keys *keys)
 {
-	ft_putnbr(k);
 	if (k == 'w')
 		keys->w = 1;
 	if (k == 's')
@@ -23,12 +22,15 @@ int		keys_in(int k, t_keys *keys)
 		keys->a = 1;
 	if (k == 'd')
 		keys->d = 1;
+	if (k == 65363)
+		keys->ra = 1;
+	if (k == 65361)
+		keys->la = 1;
 	return (1);
 }
 
-int		keys_out(int k, t_keys *keys)
+int		key_out(int k, t_keys *keys)
 {
-	ft_putnbr(k);
 	if (k == 'w')
 		keys->w = 0;
 	if (k == 's')
@@ -37,39 +39,49 @@ int		keys_out(int k, t_keys *keys)
 		keys->a = 0;
 	if (k == 'd')
 		keys->d = 0;
+	if (k == 65363)
+		keys->ra = 0;
+	if (k == 65361)
+		keys->la = 0;
 	return (1);
 }
 
-void	view_redraw(t_scene *sc)
+void	redraw_view(t_scene *sc)
 {
-	clean_view(sc);
-//	map_draw2d(sc);
-//	player_draw2d(sc);
+	ray_cast(sc);
+	if (sc->set.mini)
+		minimap_draw(sc);
+	mlx_put_image_to_window(sc->view.mlx, sc->view.win, sc->img_buf.ptr, 0, 0);
 }
 
 int		player_move(t_scene *sc)
 {
 	int	sign;
 
-	ray_cast(sc);
+	if (sc->key.a || sc->key.d)
+	{
+		sign = (sc->key.a) ? -1 : 1;
+		sc->plr.angle += ROT_SPEED * sign;
+		sc->plr.cos = cos(deg_to_rad(sc->plr.angle)) * PLR_SPEED;
+		sc->plr.sin = sin(deg_to_rad(sc->plr.angle)) * PLR_SPEED;
+	}
 	if (sc->key.w || sc->key.s)
 	{
 		sign = (sc->key.w) ? 1 : -1;
-		sc->plr.x += sc->plr.dx * sign;
-		sc->plr.y += sc->plr.dy * sign;
-		sc->key.w = 0;
-		sc->key.s = 0;
-		view_redraw(sc);
+		sc->plr.x += sc->plr.cos * sign;
+		sc->plr.y += sc->plr.sin * sign;
 	}
-	if (sc->key.a || sc->key.d)
+	if (sc->key.la)
 	{
-		sign = (sc->key.d) ? 1 : -1;
-		sc->plr.angle = fix_angle(sc->plr.angle + ROT_SPEED * sign);
-		sc->plr.dx = cos(deg_to_rad(sc->plr.angle)) * ROT_MUL;
-		sc->plr.dy = -sin(deg_to_rad(sc->plr.angle)) * ROT_MUL;
-		sc->key.a = 0;
-		sc->key.d = 0;
-		view_redraw(sc);
+		sc->plr.x -= cos(deg_to_rad(sc->plr.angle + 90)) * PLR_SPEED;
+		sc->plr.y -= sin(deg_to_rad(sc->plr.angle + 90)) * PLR_SPEED;
 	}
+	if (sc->key.ra)
+	{
+		sc->plr.x += cos(deg_to_rad(sc->plr.angle + 90)) * PLR_SPEED;
+		sc->plr.y += sin(deg_to_rad(sc->plr.angle + 90)) * PLR_SPEED;
+	}
+	if (sc->key.w || sc->key.s || sc->key.a || sc->key.d || sc->key.la || sc->key.ra)
+		redraw_view(sc);
 	return (1);
 }

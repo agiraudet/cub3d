@@ -5,23 +5,23 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/09 21:05:08 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/11 01:33:47 by agiraude         ###   ########.fr       */
+/*   Created: 2020/12/13 17:41:55 by agiraude          #+#    #+#             */
+/*   Updated: 2020/12/15 10:24:38 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub.h"
+#include "../includes/cub3d.h"
 
 int		main(int argc, char **argv)
 {
-	t_scene		*sc;
+	t_scene *sc;
 
-	if (argc == 2)
-		sc = scene_init(argv[1]);
-	else
-		sc = scene_init(0);
-	view_redraw(sc);
-	mlx_loop(sc->mlx);
-	scene_destroy(sc);
+	if (argc != 2)
+		return (0);
+	sc = scene_init(argv[1]);
+	if (!sc)
+		return (1);
+	redraw_view(sc);
+	mlx_loop(sc->view.mlx);
 	return (0);
 }

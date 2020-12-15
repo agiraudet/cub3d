@@ -5,14 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/10 23:58:27 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/11 01:32:13 by agiraude         ###   ########.fr       */
+/*   Created: 2020/12/13 17:46:08 by agiraude          #+#    #+#             */
+/*   Updated: 2020/12/14 15:32:55 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub.h"
-#include "../includes/get_next_line.h"
-#include <fcntl.h>
+#include "../includes/cub3d.h"
 
 int			cmp_id(const char *str, const char *id)
 {
@@ -62,35 +60,101 @@ void	setting_color_set(unsigned int *color, const char *line)
 		free(values[i++]);
 }
 
-t_settings	setting_init(char *path)
+void	wip_str(t_map *map)
 {
-	t_settings	sets;
-	int			fd;
-	char		*line;
+	char *str;
+	int	i;
+
+	str = map->str;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] != ' ' && str[i] != '1' && str[i] != '0')
+			str[i] = '0';
+		i++;
+	}
+}
+
+char	*map_correct_len(char *str, int old_len, int new_len, int nb_line)
+{
+	char	*new_str;
+	int		i;
+	int		j;
+	int		line_count;
+
+	new_str = malloc(sizeof(char) * (nb_line * new_len + 1));
+	if (!new_str)
+		return (0);
+	line_count = 0;
+	j = 0;
+	while (line_count < nb_line)
+	{
+		i = 0;
+		while (i < old_len)
+			new_str[j++] = str[line_count * old_len + i++];
+		while (i < new_len)
+		{
+			new_str[j++] = ' ';
+			i++;
+		}
+		line_count++;
+	}
+	new_str[j] = '\0';
+	free(str);
+	return (new_str);
+}
+
+void	map_add(t_map *map, const char *line)
+{
+	static int	nb_line = 0;
+	char	*tmp;
+	int		len;
+
+	ft_putendl(line);
+	len = ft_strlen(line);
+	if (len > map->size_x)
+	{
+		if (nb_line > 0)
+			map->str = map_correct_len(map->str, map->size_x, len, nb_line);
+		map->size_x = len;
+	}
+	tmp = map->str;
+	map->str = ft_strjoin(tmp, line);
+	free(tmp);
+	map->size_y += 1;
+	nb_line++;
+}
+
+int		parse_file(t_scene *sc, char *path)
+{
+	int		fd;
+	char	*line;
 
 	fd = open(path, O_RDONLY);
 	if (fd == -1)
-		return (sets);
+		return (-1);
 	while (get_next_line(fd, &line) > 0)
 	{
 		if (cmp_id(line, "R "))
-			setting_res_set(&sets, line);
+			setting_res_set(&sc->set, line);
 		else if (cmp_id(line, "NO"))
-			setting_tex_set(&sets.tex_no, line);
+			setting_tex_set(&sc->set.tex_no, line);
 		else if (cmp_id(line, "SO"))
-			setting_tex_set(&sets.tex_so, line);
+			setting_tex_set(&sc->set.tex_so, line);
 		else if (cmp_id(line, "WE"))
-			setting_tex_set(&sets.tex_we, line);
+			setting_tex_set(&sc->set.tex_we, line);
 		else if (cmp_id(line, "EA"))
-			setting_tex_set(&sets.tex_ea, line);
+			setting_tex_set(&sc->set.tex_ea, line);
 		else if (cmp_id(line, "S "))
-			setting_tex_set(&sets.tex_s, line);
+			setting_tex_set(&sc->set.tex_s, line);
 		else if (cmp_id(line, "F "))
-			setting_color_set(&sets.color_f, line);
+			setting_color_set(&sc->set.color_f, line);
 		else if (cmp_id(line, "C "))
-			setting_color_set(&sets.color_c, line);
+			setting_color_set(&sc->set.color_c, line);
+		else if (*line)
+			map_add(&sc->map, line);
 		free(line);
 	}
-	sets.win_label = ft_strdup("TEST");
-	return (sets);
+	wip_str(&sc->map);
+	return (1);
 }

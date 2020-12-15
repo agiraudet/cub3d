@@ -6,7 +6,7 @@
 #    By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/04 10:43:09 by agiraude          #+#    #+#              #
-#    Updated: 2020/12/11 11:08:29 by agiraude         ###   ########.fr        #
+#    Updated: 2020/12/15 10:58:00 by agiraude         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,14 +23,14 @@ SRCS_DIR	=	srcs/
 SRCS_FILES	=	inits.c \
 				loop.c \
 				main.c \
-				mlx_draw.c \
-				mlx_utils.c \
-				wip.c \
 				raycast.c \
 				render.c \
 				get_next_line.c \
 				get_next_line_utils.c \
-				parser.c
+				parser.c \
+				texture.c \
+				utils.c \
+				minimap.c
 
 SRCS		=	$(addprefix $(SRCS_DIR), $(SRCS_FILES))
 
@@ -38,13 +38,13 @@ OBJS		=	$(SRCS:.c=.o)
 
 CC			=	gcc
 
-CFLAGS		=	-Wall -Wextra -Werror
+CFLAGS		=	-Wall -Wextra
 
 RM			=	rm -f
 
 NAME		=	cub3d
 
-DEP			=	-lft -lmlx -lXext -lX11 -lm
+DEP			=	-lft -lmlx_Linux -lXext -lX11 -lm
 
 .c.o:
 				$(CC) $(CFLAGS) -c $< -o $(<:.c=.o) -I $(INC_DIR)
@@ -59,7 +59,7 @@ $(NAME):		$(OBJS) $(LIBFT)
 				$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -L $(MLX_DIR) -L $(LIBFT_DIR) $(DEP)
 
 debug:			$(OBJS) $(LIBFT)
-				$(CC) $(CFLAGS) -g -o $(NAME) $(OBJS) -L $(MLX_DIR) -L $(LIBFT_DIR) $(DEP)
+				$(CC) $(CFLAGS) -g -o $(NAME) $(SRCS) -L $(MLX_DIR) -L $(LIBFT_DIR) $(DEP)
 clean:
 				$(RM) $(OBJS)
 				make clean -C $(LIBFT_DIR)
