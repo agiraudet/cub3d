@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 23:43:43 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/15 14:02:43 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/20 00:10:46 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,35 @@
 # include "../libft/includes/libft.h"
 # include "settings.h"
 
-typedef struct		s_ray
+typedef struct	s_player
 {
-	float			angle;
-	float			x;
-	float			y;
-	float			cos;
-	float			sin;
-	float			dist;
-}					t_ray;
+	double		pos_x;
+	double		pos_y;
+	double		dir_x;
+	double		dir_y;
+	double		plan_x;
+	double		plan_y;
+}				t_player;
+
+typedef struct	s_ray
+{
+	double		dir_x;
+	double		dir_y;
+	int			map_x;
+	int			map_y;
+	double		delta_dist_x;
+	double		delta_dist_y;
+	int			hit;
+	int			step_x;
+	int			step_y;
+	double		side_dist_x;
+	double		side_dist_y;
+	int			side;
+	double		perp_wall_dist;
+	int			line_hg;
+	int			draw_start;
+	int			draw_end;
+}				t_ray;
 
 typedef struct		s_view
 {
@@ -59,21 +79,12 @@ typedef struct		s_tex
 	int				hg;
 }					t_tex;
 
-typedef struct		s_tile
-{
-	char			data;
-	t_rect			rect;
-	unsigned int	color;
-}					t_tile;
-
 typedef struct		s_minimap
 {
 	int				size;
-	int				nb_tile;
-	t_tile			*tile;
+	int				show;
 	int				x;
 	int				y;
-	int				show_ray;
 }					t_minimap;
 
 typedef struct	s_proj
@@ -102,26 +113,14 @@ typedef struct		s_settings
 	t_proj			proj;
 }					t_settings;
 
-typedef struct		s_player
-{
-	float				x;
-	float				y;
-	float				cos;
-	float				sin;
-	float				dx;
-	float				dy;
-	float				angle;
-	int				fov;
-}					t_player;
-
 typedef struct		s_keys
 {
-	int				w;
-	int				s;
-	int				a;
-	int				d;
-	int				la;
-	int				ra;
+	int				up;
+	int				down;
+	int				rotl;
+	int				rotr;
+	int				strafl;
+	int				strafr;
 }					t_keys;
 
 typedef struct		s_map
@@ -146,29 +145,26 @@ typedef struct		s_scene
 }					t_scene;
 
 t_scene				*scene_init(char *path);
-int		parse_file(t_scene *sc, char *path);
-void	minimap_load(t_scene *sc);
-int		key_in(int k, t_keys *keys);
-int		key_out(int k, t_keys *keys);
-int		player_move(t_scene *sc);
-int	tex_load(t_scene *sc, int tex_nb, char *path);
-void		ray_cast(t_scene *sc);
+int					parse_file(t_scene *sc, char *path);
+int					key_in(int k, t_keys *keys);
+int					key_out(int k, t_keys *keys);
+int					player_move(t_scene *sc);
+int					tex_load(t_scene *sc, int tex_nb, char *path);
 float				deg_to_rad(int angle);
-unsigned int				rgb_to_i(int a, int r, int g, int b);
-int				fix_angle(float a);
-void			wall_draw(t_scene *sc, int ray_count, int wall_hg, t_ray *ray);
-t_rect	rect_init(int x, int y, int wd, int hg);
-void			minimap_draw(t_scene *sc);
-void	minimap_ray_draw(t_scene *sc, t_ray *ray);
-void    rect_draw(t_scene *sc, t_rect rect, int color, int outline);
-void    line_draw(t_view *v, int x0, int y0, int x1, int y1);
-void    line_ang_draw(t_view *v, int x, int y, float angle, int len);
-int				point_in_rect(int x, int y, t_rect *rect);
-int		minimap_check(t_scene *sc, int x, int y);
-void	redraw_view(t_scene *sc);
-int		tex_get_color(t_tex *tex, int x, int y);
-int tex_draw(t_scene *sc, int tex_id, int x1, int y1);
-void			i_to_rgb(int color, int *rgba);
-void	pixel_put_buffer(t_scene *sc, int x, int y, int color);
+unsigned int		rgb_to_i(int a, int r, int g, int b);
+int					fix_angle(float a);
+t_rect				rect_init(int x, int y, int wd, int hg);
+void				rect_draw(t_scene *sc, t_rect rect, int color, int outline);
+void				redraw_view(t_scene *sc);
+void				i_to_rgb(int color, int *rgba);
+void				pixel_put_buffer(t_scene *sc, int x, int y, int color);
+void				minimap_draw(t_scene *sc);
+void				raycast(t_scene *sc);
 
+int		tex_get_color(t_tex *tex, int x, int y);
+int		tex_get_nb(t_ray *ray);
+
+void		ceil_render(t_scene *sc, int x, t_ray *ray);
+void		floor_render(t_scene *sc, int x, t_ray *ray);
+void		strip_render(t_scene *sc, int x, t_ray *ray);
 #endif

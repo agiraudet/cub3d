@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 17:43:34 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/15 12:26:31 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/19 23:15:23 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 int		setting_init(t_scene *sc, char *path)
 {
-	sc->set.mini = MINIMAP;
 	sc->map.str = ft_strdup("");
 	sc->map.size_x = 0;
 	sc->map.size_y = 0;
@@ -47,44 +46,32 @@ int		buffer_init(t_scene *sc)
 
 int		minimap_init(t_scene *sc)
 {
-	int		i;
-
 	sc->mini.size = MINI_SIZE;
 	sc->mini.x = MINI_X;
 	sc->mini.y = MINI_Y;
-	sc->mini.show_ray = MINI_SHOW_RAY;
-	i = 0;
-	while (sc->map.str[i])
-		if (sc->map.str[i++] != ' ')
-			sc->mini.nb_tile += 1;
-	sc->mini.tile = malloc(sizeof(t_tile) * sc->mini.nb_tile);
-	if (!sc->mini.tile)
-		return (0);
-	minimap_load(sc);
+	sc->mini.show = MINI_SHOW;
 	return (1);
 }
 
 int		plr_init(t_scene *sc)
 {
-	sc->plr.x = 5;
-	sc->plr.y = 5;
-	sc->plr.dx = PLR_SPEED;
-	sc->plr.dy = 0;
-	sc->plr.angle = 90;
-	sc->plr.cos = cos(deg_to_rad(sc->plr.angle)) * PLR_SPEED;
-	sc->plr.sin = sin(deg_to_rad(sc->plr.angle)) * PLR_SPEED;
-	sc->plr.fov = 60;
+	sc->plr.pos_x = 5;
+	sc->plr.pos_y = 5;
+	sc->plr.dir_x = -1.;
+	sc->plr.dir_y = 0.;
+	sc->plr.plan_x = 0.;
+	sc->plr.plan_y = 0.66;
 	return (1);
 }
 
 int		key_init(t_scene *sc)
 {
-	sc->key.w = 0;
-	sc->key.s = 0;
-	sc->key.a = 0;
-	sc->key.d = 0;
-	sc->key.la = 0;
-	sc->key.ra = 0;
+	sc->key.up = 0;
+	sc->key.down = 0;
+	sc->key.rotl = 0;
+	sc->key.rotr = 0;
+	sc->key.strafl = 0;
+	sc->key.strafr = 0;
 	return (1);
 }
 

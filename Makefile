@@ -6,7 +6,7 @@
 #    By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/04 10:43:09 by agiraude          #+#    #+#              #
-#    Updated: 2020/12/15 10:58:00 by agiraude         ###   ########.fr        #
+#    Updated: 2020/12/19 23:55:24 by agiraude         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,14 +23,14 @@ SRCS_DIR	=	srcs/
 SRCS_FILES	=	inits.c \
 				loop.c \
 				main.c \
-				raycast.c \
-				render.c \
 				get_next_line.c \
 				get_next_line_utils.c \
+				raycast.c \
 				parser.c \
 				texture.c \
 				utils.c \
-				minimap.c
+				minimap.c \
+				render.c
 
 SRCS		=	$(addprefix $(SRCS_DIR), $(SRCS_FILES))
 

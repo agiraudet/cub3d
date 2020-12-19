@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 03:25:08 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/15 13:47:50 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/19 23:16:31 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,74 +14,80 @@
 
 int		key_in(int k, t_keys *keys)
 {
-	if (k == 'w')
-		keys->w = 1;
-	if (k == 's')
-		keys->s = 1;
-	if (k == 'a')
-		keys->a = 1;
-	if (k == 'd')
-		keys->d = 1;
-	if (k == 65363)
-		keys->ra = 1;
-	if (k == 65361)
-		keys->la = 1;
+	if (k == K_UP)
+		keys->up = 1;
+	if (k == K_DOWN)
+		keys->down = 1;
+	if (k == K_ROT_L)
+		keys->rotl = 1;
+	if (k == K_ROT_R)
+		keys->rotr = 1;
+	if (k == K_STRAF_R)
+		keys->strafr = 1;
+	if (k == K_STRAF_L)
+		keys->strafl = 1;
 	return (1);
 }
 
 int		key_out(int k, t_keys *keys)
 {
-	if (k == 'w')
-		keys->w = 0;
-	if (k == 's')
-		keys->s = 0;
-	if (k == 'a')
-		keys->a = 0;
-	if (k == 'd')
-		keys->d = 0;
-	if (k == 65363)
-		keys->ra = 0;
-	if (k == 65361)
-		keys->la = 0;
+	if (k == K_UP)
+		keys->up = 0;
+	if (k == K_DOWN)
+		keys->down = 0;
+	if (k == K_ROT_L)
+		keys->rotl = 0;
+	if (k == K_ROT_R)
+		keys->rotr = 0;
+	if (k == K_STRAF_R)
+		keys->strafr = 0;
+	if (k == K_STRAF_L)
+		keys->strafl = 0;
 	return (1);
 }
 
 void	redraw_view(t_scene *sc)
 {
-	ray_cast(sc);
-	if (sc->set.mini)
+	raycast(sc);
+	if (sc->mini.show)
 		minimap_draw(sc);
 	mlx_put_image_to_window(sc->view.mlx, sc->view.win, sc->img_buf.ptr, 0, 0);
 }
 
+void	player_go(t_scene *sc, int dir)
+{
+	float	new_x;
+	float	new_y;
+
+	new_x = sc->plr.pos_x + sc->plr.dir_x * dir * PLR_SPEED;
+	new_y = sc->plr.pos_y + sc->plr.dir_y * dir * PLR_SPEED;
+	if (1)
+	{
+		sc->plr.pos_x = new_x;
+		sc->plr.pos_y = new_y;
+	}
+}
+
+void	player_rot(t_scene *sc, int dir)
+{
+		double	old_dir = sc->plr.dir_x;
+		sc->plr.dir_x = sc->plr.dir_x * cos(dir * ROT_SPEED) - sc->plr.dir_y * sin(dir * ROT_SPEED);
+		sc->plr.dir_y = old_dir * sin(dir * ROT_SPEED) + sc->plr.dir_y * cos(dir * ROT_SPEED);
+		double	old_plane_x = sc->plr.plan_x;
+		sc->plr.plan_x = sc->plr.plan_x * cos(dir * ROT_SPEED) - sc->plr.plan_y * sin(dir * ROT_SPEED);
+		sc->plr.plan_y = old_plane_x * sin(dir * ROT_SPEED) + sc->plr.plan_y * cos(dir * ROT_SPEED);
+}
+
 int		player_move(t_scene *sc)
 {
-	int	sign;
-
-	if (sc->key.a || sc->key.d)
-	{
-		sign = (sc->key.a) ? -1 : 1;
-		sc->plr.angle += ROT_SPEED * sign;
-		sc->plr.cos = cos(deg_to_rad(sc->plr.angle)) * PLR_SPEED;
-		sc->plr.sin = sin(deg_to_rad(sc->plr.angle)) * PLR_SPEED;
-	}
-	if (sc->key.w || sc->key.s)
-	{
-		sign = (sc->key.w) ? 1 : -1;
-		sc->plr.x += sc->plr.cos * sign;
-		sc->plr.y += sc->plr.sin * sign;
-	}
-	if (sc->key.la)
-	{
-		sc->plr.x -= cos(deg_to_rad(sc->plr.angle + 90)) * PLR_SPEED;
-		sc->plr.y -= sin(deg_to_rad(sc->plr.angle + 90)) * PLR_SPEED;
-	}
-	if (sc->key.ra)
-	{
-		sc->plr.x += cos(deg_to_rad(sc->plr.angle + 90)) * PLR_SPEED;
-		sc->plr.y += sin(deg_to_rad(sc->plr.angle + 90)) * PLR_SPEED;
-	}
-	if (sc->key.w || sc->key.s || sc->key.a || sc->key.d || sc->key.la || sc->key.ra)
-		redraw_view(sc);
+	if (sc->key.rotl)
+		player_rot(sc, LEFT);
+	if (sc->key.rotr)
+		player_rot(sc, RIGHT);
+	if (sc->key.up)
+		player_go(sc, UP);
+	if (sc->key.down)
+		player_go(sc, DOWN);
+	redraw_view(sc);
 	return (1);
 }

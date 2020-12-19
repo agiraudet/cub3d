@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 23:53:26 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/15 12:35:47 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/20 00:03:30 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,25 +45,7 @@ int		tex_get_color(t_tex *tex, int x, int y)
 	return (rgb_to_i(a, r, g, b));
 }
 
-int tex_draw(t_scene *sc, int tex_id, int x1, int y1)
+int		tex_get_nb(t_ray *ray)
 {
-	t_tex	*tex;
-	int color;
-	int x;
-	int y;
-
-	tex = &sc->texs[tex_id];
-	y = 0;
-	while (y < tex->hg)
-	{
-		x = 0;
-		while (x < tex->wd)
-		{
-			color = tex_get_color(tex, x, y);
-			mlx_pixel_put(sc->view.mlx, sc->view.win, x + x1, y + y1, color);
-			x++;
-		}
-		y++;
-	}
 	return (0);
 }
