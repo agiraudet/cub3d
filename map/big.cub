@@ -1,9 +1,9 @@
 R 1920 1080
 
-NO ./tex/bigwall.xpm
-SO ./textures/colorstone.xpm
-WE ./textures/greystone.xpm
-EA ./textures/redbrick.xpm
+NO ./tex/quartz_block_top.xpm
+SO ./tex/quartz_pillar.xpm
+WE ./tex/quartz_pillar_top.xpm
+EA ./tex/smithing_table_bottom.xpm
 S ./textures/pillar.xpm
 
 F 117, 142, 79

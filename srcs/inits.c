@@ -6,11 +6,12 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 17:43:34 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/19 23:15:23 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/21 01:41:44 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
+
 
 int		setting_init(t_scene *sc, char *path)
 {
@@ -18,7 +19,8 @@ int		setting_init(t_scene *sc, char *path)
 	sc->map.size_x = 0;
 	sc->map.size_y = 0;
 	sc->map.size_tile = 64;
-	parse_file(sc, path);
+	if (!parse_file(sc, path))
+		return (0);
 	sc->set.proj.scale = PROJ_SCALE;
 	sc->set.proj.wd = sc->set.win_x / PROJ_SCALE;
 	sc->set.proj.hg = sc->set.win_y / PROJ_SCALE;
@@ -34,10 +36,14 @@ int		buffer_init(t_scene *sc)
 	buffer = &sc->img_buf;
 	buffer->ptr = mlx_new_image(sc->view.mlx, sc->set.win_x, sc->set.win_y);
 	if (!buffer->ptr)
+	{
+		error_set(1, "pointer to image buffer");
 		return (0);
+	}
 	buffer->data = mlx_get_data_addr(buffer->ptr, &buffer->bpp, &buffer->line_len, &buffer->endian);
 	if (!buffer->data)
 	{
+		error_set(1, "data space of image buffer");
 		free(buffer->ptr);
 		return (0);
 	}
@@ -46,21 +52,63 @@ int		buffer_init(t_scene *sc)
 
 int		minimap_init(t_scene *sc)
 {
-	sc->mini.size = MINI_SIZE;
-	sc->mini.x = MINI_X;
-	sc->mini.y = MINI_Y;
+	sc->mini.size = MINI_SIZE / PROJ_SCALE;
+	sc->mini.x = MINI_X / PROJ_SCALE;
+	sc->mini.y = MINI_Y / PROJ_SCALE;
 	sc->mini.show = MINI_SHOW;
 	return (1);
 }
 
 int		plr_init(t_scene *sc)
 {
-	sc->plr.pos_x = 5;
-	sc->plr.pos_y = 5;
-	sc->plr.dir_x = -1.;
-	sc->plr.dir_y = 0.;
-	sc->plr.plan_x = 0.;
-	sc->plr.plan_y = 0.66;
+	int		x;
+	int		y;
+	char	pos;
+
+	y = 0;
+	while (y < sc->map.size_y)
+	{
+		x = 0;
+		while (x < sc->map.size_x)
+		{
+			pos = sc->map.str[y * sc->map.size_x + x];
+			if (ft_strchr("NEWS", pos))
+			{
+				sc->plr.pos_x = x;
+				sc->plr.pos_y = y;
+				if (pos == 'E')
+				{
+					sc->plr.dir_x = 1.;
+					sc->plr.dir_y = 0.;
+					sc->plr.plan_x = 0.;
+					sc->plr.plan_y = 0.66;
+				}
+				if (pos == 'W')
+				{
+					sc->plr.dir_x = -1.;
+					sc->plr.dir_y = 0.;
+					sc->plr.plan_x = 0.;
+					sc->plr.plan_y = 0.66;
+				}
+				if (pos == 'S')
+				{
+					sc->plr.dir_x = 0.;
+					sc->plr.dir_y = 1.;
+					sc->plr.plan_x = 0.66;
+					sc->plr.plan_y = 0.;
+				}
+				if (pos == 'N')
+				{
+					sc->plr.dir_x = 0.;
+					sc->plr.dir_y = -1.;
+					sc->plr.plan_x = 0.66;
+					sc->plr.plan_y = 0.;
+				}
+			}
+			x++;
+		}
+		y++;
+	}
 	return (1);
 }
 
@@ -92,14 +140,37 @@ int		hook_init(t_scene *sc)
 
 int		tex_init(t_scene *sc)
 {
-	sc->nb_tex = 4;
+	sc->nb_tex = 5 + BONUS * 2;
 	sc->texs = malloc(sizeof(t_tex) * sc->nb_tex);
 	if (!sc->texs)
+	{
+		error_set(1, "texs array");
 		return (0);
+	}
+	/*
 	if (!tex_load(sc, TEX_NO, sc->set.tex_no))
 	{
+		error_set(2, sc->set.tex_no);
 		free(sc->texs);
 		return (0);
+	}
+	*/
+	if (!tex_load(sc, TEX_NO, sc->set.tex_no))
+		return (0);
+	if (!tex_load(sc, TEX_SO, sc->set.tex_so))
+		return (0);
+	if (!tex_load(sc, TEX_WE, sc->set.tex_we))
+		return (0);
+	if (!tex_load(sc, TEX_EA, sc->set.tex_ea))
+		return (0);
+	if (!tex_load(sc, TEX_S, sc->set.tex_s))
+		return (0);
+	if (BONUS)
+	{
+		if (!tex_load(sc, TEX_F, sc->set.tex_f))
+			return (0);
+		if(!tex_load(sc, TEX_BG, sc->set.tex_bg))
+			return (0);
 	}
 	return (1);
 }
@@ -110,7 +181,10 @@ t_scene	*scene_init(char *path)
 
 	sc = malloc(sizeof(t_scene));
 	if (!sc)
+	{
+		error_set(1, "scene object");
 		return (0);
+	}
 	setting_init(sc, path);
 	minimap_init(sc);
 	plr_init(sc);

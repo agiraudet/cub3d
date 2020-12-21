@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 03:25:08 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/19 23:16:31 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/21 00:01:16 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int		key_out(int k, t_keys *keys)
 void	redraw_view(t_scene *sc)
 {
 	raycast(sc);
-	if (sc->mini.show)
+	if (BONUS && sc->mini.show)
 		minimap_draw(sc);
 	mlx_put_image_to_window(sc->view.mlx, sc->view.win, sc->img_buf.ptr, 0, 0);
 }
@@ -61,7 +61,7 @@ void	player_go(t_scene *sc, int dir)
 
 	new_x = sc->plr.pos_x + sc->plr.dir_x * dir * PLR_SPEED;
 	new_y = sc->plr.pos_y + sc->plr.dir_y * dir * PLR_SPEED;
-	if (1)
+	if (sc->map.str[(int)new_y * sc->map.size_x + (int)new_x] != '1')
 	{
 		sc->plr.pos_x = new_x;
 		sc->plr.pos_y = new_y;

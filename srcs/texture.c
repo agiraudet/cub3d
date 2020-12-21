@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 23:53:26 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/20 00:03:30 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/20 21:35:44 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,14 @@ int		tex_load(t_scene *sc, int tex_nb, char *path)
 
 	tex.ptr = mlx_xpm_file_to_image(sc->view.mlx, path, &tex.wd, &tex.hg);
 	if (!tex.ptr)
+	{
+		error_set(2, path);
 		return (0);
+	}
 	tex.data = mlx_get_data_addr(tex.ptr, &tex.bpp, &tex.line_len, &tex.endian);
 	if (!tex.data)
 	{
+		error_set(2, path);
 		free(tex.ptr);
 		return (0);
 	}
@@ -29,7 +33,7 @@ int		tex_load(t_scene *sc, int tex_nb, char *path)
 	return (1);
 }
 
-int		tex_get_color(t_tex *tex, int x, int y)
+unsigned int		tex_get_color(t_tex *tex, int x, int y)
 {
 	int r = 0;
 	int g = 0;
@@ -38,6 +42,8 @@ int		tex_get_color(t_tex *tex, int x, int y)
 	int	div;
 
 	div = tex->bpp / 4;
+	if (div <= 0)
+		div = 1;
 	b = tex->data[tex->line_len * y + tex->bpp / div * x];
 	g = tex->data[tex->line_len * y + tex->bpp / div * x + 1];
 	r = tex->data[tex->line_len * y + tex->bpp / div * x + 2];
@@ -45,7 +51,23 @@ int		tex_get_color(t_tex *tex, int x, int y)
 	return (rgb_to_i(a, r, g, b));
 }
 
-int		tex_get_nb(t_ray *ray)
+void	tex_put(t_scene *sc, t_tex *tex, int x, int y)
 {
-	return (0);
+	int y1;
+	int x1;
+	unsigned int	color;
+
+	y1 = 0;
+	while (y1 < tex->hg)
+	{
+		x1 = 0;
+		while (x1 < tex->wd)
+		{
+			color = tex_get_color(tex, x1, y1);
+			if (color != 4278190080)
+				pixel_put_buffer(sc, x + x1, y + y1, color);
+			x1++;
+		}
+		y1++;
+	}
 }

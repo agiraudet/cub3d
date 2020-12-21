@@ -6,7 +6,7 @@
 #    By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/04 10:43:09 by agiraude          #+#    #+#              #
-#    Updated: 2020/12/19 23:55:24 by agiraude         ###   ########.fr        #
+#    Updated: 2020/12/20 23:10:32 by agiraude         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,9 @@ OBJS		=	$(SRCS:.c=.o)
 
 CC			=	gcc
 
-CFLAGS		=	-Wall -Wextra
+BONUS		= 	1
+
+CFLAGS		=	-Wall -Wextra -D BONUS=$(BONUS)
 
 RM			=	rm -f
 
@@ -56,10 +58,11 @@ $(LIBFT):
 				cp $(LIBFT_DIR)$(LIBFT) $(NAME)
 
 $(NAME):		$(OBJS) $(LIBFT)
-				$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -L $(MLX_DIR) -L $(LIBFT_DIR) $(DEP)
+				$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -L $(MLX_DIR) -L $(LIBFT_DIR) $(DEP) -I $(INC_DIR)
 
 debug:			$(OBJS) $(LIBFT)
 				$(CC) $(CFLAGS) -g -o $(NAME) $(SRCS) -L $(MLX_DIR) -L $(LIBFT_DIR) $(DEP)
+
 clean:
 				$(RM) $(OBJS)
 				make clean -C $(LIBFT_DIR)

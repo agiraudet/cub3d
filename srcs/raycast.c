@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/19 22:46:08 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/20 00:02:28 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/21 13:25:58 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	dda(t_scene *sc, t_ray *ray)
 			else
 				ray->side = 3;
 		}
-		if (sc->map.str[ray->map_y * sc->map.size_x + ray->map_x] !=  '0')
+		if (sc->map.str[ray->map_y * sc->map.size_x + ray->map_x] ==  '1')
 			ray->hit = 1;
 	}
 }
@@ -88,26 +88,13 @@ void	ray_get_dist(t_scene *sc, t_ray *ray)
 }
 
 
-void	ray_draw(t_scene *sc, t_ray *ray, int x)
-{
-	ray->draw_start = -ray->line_hg / 2 + sc->set.proj.hg / 2;
-	if (ray->draw_start < 0)
-		ray->draw_start = 0;
-	ray->draw_end = ray->line_hg / 2 + sc->set.proj.hg / 2;
-	if (ray->draw_end >= sc->set.proj.hg)
-		ray->draw_end = sc->set.proj.hg;
-
-
-	ceil_render(sc, x, ray);
-	strip_render(sc, x, ray);
-	floor_render(sc, x, ray);
-}
-
 void	raycast(t_scene *sc)
 {
 	t_ray	ray;
 	int		x;
 
+	if (BONUS)
+		ground_render(sc);
 	x = 0;
 	while (x < sc->set.proj.wd)
 	{
@@ -117,4 +104,5 @@ void	raycast(t_scene *sc)
 		ray_draw(sc, &ray, x);
 		x++;
 	}
+	tex_put(sc, &sc->texs[TEX_S], 200, 200);
 }

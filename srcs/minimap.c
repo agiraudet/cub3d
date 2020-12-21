@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/19 16:20:56 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/19 23:14:42 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/21 13:32:28 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,17 @@ void	minimap_draw(t_scene *sc)
 	while (y < sc->map.size_y)
 	{
 		x = 0;
-		color = 0;
 		while (x < sc->map.size_x)
 		{
-			if (sc->map.str[y * sc->map.size_x + x] == '0')
-				color = BLACK;
-			if (sc->map.str[y * sc->map.size_x + x] == '1')
-				color = WHITE;
+			color = 0;
+			if (ft_strchr("02NEWS", sc->map.str[y * sc->map.size_x + x]))
+				color = LIGHT_GRAY;
+			else if (sc->map.str[y * sc->map.size_x + x] == '1')
+				color = 0;
 			if (color)
 			{
 				tile = rect_init(x * sc->mini.size + sc->mini.x, y * sc->mini.size + sc->mini.y, sc->mini.size, sc->mini.size);
-				rect_draw(sc, tile, color, GRAY);
+				rect_draw(sc, tile, color, -1);
 			}
 			x++;
 		}

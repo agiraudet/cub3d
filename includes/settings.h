@@ -6,14 +6,14 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 23:48:12 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/19 23:29:49 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/21 13:31:40 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SETTING_H
 # define SETTING_H
 
-# define PROJ_SCALE 1
+# define PROJ_SCALE 2
 
 # define MINI_SHOW 1
 # define MINI_SIZE 10
@@ -30,9 +30,11 @@
 # define TEX_WE 2
 # define TEX_EA 3
 # define TEX_S 4
+# define TEX_F 5
+# define TEX_BG 6
 
-# define LEFT 1
-# define RIGHT -1
+# define LEFT -1
+# define RIGHT 1
 # define UP 1
 # define DOWN -1
 
@@ -54,5 +56,6 @@
 # define CYAN 4278255615
 # define MAGENTA 4294902015
 # define GRAY 4282400832
+# define LIGHT_GRAY 4286485452
 
 #endif

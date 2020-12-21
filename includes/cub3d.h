@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 23:43:43 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/20 00:10:46 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/20 23:48:16 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,26 @@ typedef struct		s_tex
 	int				hg;
 }					t_tex;
 
+typedef struct	s_floor
+{
+	double		ray_dir_x0;
+	double		ray_dir_x1;
+	double		ray_dir_y0;
+	double		ray_dir_y1;
+	int			p;
+	double		pos_z;
+	double		row_dist;
+	double		step_x;
+	double		step_y;
+	double		x;
+	double		y;
+	int			cell_x;
+	int			cell_y;
+	int			tex_x;
+	int			tex_y;
+	t_tex		*tex;
+}				t_floor;
+
 typedef struct		s_minimap
 {
 	int				size;
@@ -106,6 +126,8 @@ typedef struct		s_settings
 	char			*tex_we;
 	char			*tex_ea;
 	char			*tex_s;
+	char			*tex_f;
+	char			*tex_bg;
 	unsigned int	color_f;
 	unsigned int	color_c;
 	char			*map;
@@ -130,6 +152,14 @@ typedef struct		s_map
 	int				size_tile;
 	char			*str;
 }					t_map;
+
+typedef struct		s_error
+{
+	int				flag;
+	int				type;
+	char			*msg;
+}					t_error;
+
 
 typedef struct		s_scene
 {
@@ -160,11 +190,16 @@ void				i_to_rgb(int color, int *rgba);
 void				pixel_put_buffer(t_scene *sc, int x, int y, int color);
 void				minimap_draw(t_scene *sc);
 void				raycast(t_scene *sc);
+void				error_set(int type, char *msg);
 
-int		tex_get_color(t_tex *tex, int x, int y);
-int		tex_get_nb(t_ray *ray);
+unsigned int		tex_get_color(t_tex *tex, int x, int y);
 
+void	ray_draw(t_scene *sc, t_ray *ray, int x);
 void		ceil_render(t_scene *sc, int x, t_ray *ray);
 void		floor_render(t_scene *sc, int x, t_ray *ray);
 void		strip_render(t_scene *sc, int x, t_ray *ray);
+void	ground_render(t_scene *sc);
+
+
+void	tex_put(t_scene *sc, t_tex *tex, int x, int y);
 #endif

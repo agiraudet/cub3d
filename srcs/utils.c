@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 02:51:18 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/19 23:10:54 by agiraude         ###   ########.fr       */
+/*   Updated: 2020/12/21 00:34:32 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ void	rect_draw(t_scene *sc, t_rect rect, int color, int outline)
 	}
 }
 
+/*
 void	pixel_put_buffer(t_scene *sc, int x, int y, int color)
 {
 	t_tex	*buf;
@@ -98,4 +99,36 @@ void	pixel_put_buffer(t_scene *sc, int x, int y, int color)
 	buf->data[offset + 1] = rgba[2];
 	buf->data[offset + 2] = rgba[1];
 	buf->data[offset + 3] = rgba[0];
+}
+*/
+
+void	pixel_put_buffer(t_scene *sc, int x, int y, int color)
+{
+	t_tex	*buf;
+	int		rgba[4];
+	int		div;
+	int		offset;
+	int		scx;
+	int		scy;
+
+	if (x < 0 || x > sc->set.proj.wd || y < 0 || y > sc->set.proj.hg)
+		return ;
+	buf = &sc->img_buf;
+	div = buf->bpp / 4;
+	offset = (buf->line_len * y + buf->bpp / div * x) * PROJ_SCALE;
+	i_to_rgb(color, rgba);
+	scy = 0;
+	while (scy < PROJ_SCALE)
+	{
+		scx = 0;
+		while (scx < PROJ_SCALE)
+		{
+			buf->data[offset + (buf->bpp / div * scx) + (buf->line_len * scy) + 0] = rgba[3];
+			buf->data[offset + (buf->bpp / div * scx) + (buf->line_len * scy) + 1] = rgba[2];
+			buf->data[offset + (buf->bpp / div * scx) + (buf->line_len * scy) + 2] = rgba[1];
+			buf->data[offset + (buf->bpp / div * scx) + (buf->line_len * scy) + 3] = rgba[0];
+			scx++;
+		}
+		scy++;
+	}
 }
