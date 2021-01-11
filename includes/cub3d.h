@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 23:43:43 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/20 23:48:16 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/07 19:13:34 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,13 @@
 # include "get_next_line.h"
 # include "../libft/includes/libft.h"
 # include "settings.h"
+
+typedef struct	s_sprite
+{
+	double		dist;
+	int			x;
+	char		id;
+}				t_sprite;
 
 typedef struct	s_player
 {
@@ -171,6 +178,8 @@ typedef struct		s_scene
 	t_minimap		mini;
 	t_tex			*texs;
 	t_tex			img_buf;
+	t_sprite		*spt_buffer;
+	int				nb_sprite;
 	int				nb_tex;
 }					t_scene;
 

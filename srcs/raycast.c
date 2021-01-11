@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/19 22:46:08 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/21 13:25:58 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/07 19:19:05 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,21 @@ void	ray_init(t_scene *sc, int x, t_ray *ray)
 	ray_init_step(sc, ray);
 }
 
-void	dda(t_scene *sc, t_ray *ray)
+double	ray_get_dist(t_scene *sc, t_ray *ray)
 {
+	if (ray->side == 0 || ray->side == 1)
+		ray->perp_wall_dist = (ray->map_x - sc->plr.pos_x + (1 - ray->step_x) / 2) / ray->dir_x;
+	else
+		ray->perp_wall_dist = (ray->map_y - sc->plr.pos_y + (1 - ray->step_y) / 2) / ray->dir_y;
+	ray->line_hg = (int)(sc->set.proj.hg / ray->perp_wall_dist);
+	return (ray->perp_wall_dist);
+}
+
+void	dda(t_scene *sc, t_ray *ray, int x)
+{
+	int	s;
+
+	s = 0;
 	while (ray->hit == 0)
 	{
 		if (ray->side_dist_x < ray->side_dist_y)
@@ -73,20 +86,17 @@ void	dda(t_scene *sc, t_ray *ray)
 			else
 				ray->side = 3;
 		}
+		if (sc->map.str[ray->map_y * sc->map.size_x + ray->map_x] ==  '2')
+		{
+			sc->spt_buffer[s].dist = ray_get_dist(sc, ray);
+			sc->spt_buffer[s].x = x;
+			sc->spt_buffer[s].id = '2';
+			s++;
+		}
 		if (sc->map.str[ray->map_y * sc->map.size_x + ray->map_x] ==  '1')
 			ray->hit = 1;
 	}
 }
-
-void	ray_get_dist(t_scene *sc, t_ray *ray)
-{
-	if (ray->side == 0 || ray->side == 1)
-		ray->perp_wall_dist = (ray->map_x - sc->plr.pos_x + (1 - ray->step_x) / 2) / ray->dir_x;
-	else
-		ray->perp_wall_dist = (ray->map_y - sc->plr.pos_y + (1 - ray->step_y) / 2) / ray->dir_y;
-	ray->line_hg = (int)(sc->set.proj.hg / ray->perp_wall_dist);
-}
-
 
 void	raycast(t_scene *sc)
 {
@@ -99,10 +109,18 @@ void	raycast(t_scene *sc)
 	while (x < sc->set.proj.wd)
 	{
 		ray_init(sc, x, &ray);
-		dda(sc, &ray);
+		dda(sc, &ray, x);
 		ray_get_dist(sc, &ray);
 		ray_draw(sc, &ray, x);
 		x++;
 	}
-	tex_put(sc, &sc->texs[TEX_S], 200, 200);
+	int i;
+	i = 0;
+	while (i < sc->nb_sprite)
+	{
+		int spt_y;
+		spt_y = sc->set.proj.half_hg - (sc->texs[TEX_S].hg / 2);
+		tex_put(sc, &sc->texs[TEX_S], sc->spt_buffer[i].x, spt_y);
+		i++;
+	}
 }

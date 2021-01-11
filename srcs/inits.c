@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 17:43:34 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/21 01:41:44 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/07 19:11:59 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,6 +175,24 @@ int		tex_init(t_scene *sc)
 	return (1);
 }
 
+int		spt_buffer_init(t_scene *sc)
+{
+	int		i;
+
+	i = 0;
+	sc->nb_sprite = 0;
+	while (sc->map.str[i])
+		if (sc->map.str[i++] == '2')
+			sc->nb_sprite++;
+	sc->spt_buffer = malloc(sizeof(t_sprite) * sc->nb_sprite);
+	if (!sc->spt_buffer)
+	{
+		error_set(1, "sprite buffer");
+		return (0);
+	}
+	return (1);
+}
+
 t_scene	*scene_init(char *path)
 {
 	t_scene	*sc;
@@ -187,6 +205,7 @@ t_scene	*scene_init(char *path)
 	}
 	setting_init(sc, path);
 	minimap_init(sc);
+	spt_buffer_init(sc);
 	plr_init(sc);
 	key_init(sc);
 	view_init(sc);
