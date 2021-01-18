@@ -6,13 +6,13 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 23:53:26 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/20 21:35:44 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/17 19:29:54 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-int		tex_load(t_scene *sc, int tex_nb, char *path)
+int				tex_load(t_scene *sc, int tex_nb, char *path)
 {
 	t_tex	tex;
 
@@ -33,12 +33,12 @@ int		tex_load(t_scene *sc, int tex_nb, char *path)
 	return (1);
 }
 
-unsigned int		tex_get_color(t_tex *tex, int x, int y)
+unsigned int	tex_get_color(t_tex *tex, int x, int y)
 {
-	int r = 0;
-	int g = 0;
-	int b = 0;
-	int a = 0;
+	int r;
+	int g;
+	int b;
+	int a;
 	int	div;
 
 	div = tex->bpp / 4;
@@ -51,10 +51,10 @@ unsigned int		tex_get_color(t_tex *tex, int x, int y)
 	return (rgb_to_i(a, r, g, b));
 }
 
-void	tex_put(t_scene *sc, t_tex *tex, int x, int y)
+void			tex_put(t_scene *sc, t_tex *tex, int x, int y)
 {
-	int y1;
-	int x1;
+	int				y1;
+	int				x1;
 	unsigned int	color;
 
 	y1 = 0;

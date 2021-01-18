@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/19 22:46:08 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/07 19:19:05 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/16 18:03:29 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,22 +17,26 @@ void	ray_init_step(t_scene *sc, t_ray *ray)
 	if (ray->dir_x < 0)
 	{
 		ray->step_x = -1;
-		ray->side_dist_x = (sc->plr.pos_x - ray->map_x) * ray->delta_dist_x;
+		ray->side_dist_x = (sc->plr.pos_x - ray->map_x)
+			* ray->delta_dist_x;
 	}
 	else
 	{
 		ray->step_x = 1;
-		ray->side_dist_x = (ray->map_x + 1.0 - sc->plr.pos_x) * ray->delta_dist_x;
+		ray->side_dist_x = (ray->map_x + 1.0 - sc->plr.pos_x)
+			* ray->delta_dist_x;
 	}
 	if (ray->dir_y < 0)
 	{
 		ray->step_y = -1;
-		ray->side_dist_y = (sc->plr.pos_y - ray->map_y) * ray->delta_dist_y;
+		ray->side_dist_y = (sc->plr.pos_y - ray->map_y)
+			* ray->delta_dist_y;
 	}
 	else
 	{
 		ray->step_y = 1;
-		ray->side_dist_y = (ray->map_y + 1.0 - sc->plr.pos_y) * ray->delta_dist_y;
+		ray->side_dist_y = (ray->map_y + 1.0 - sc->plr.pos_y)
+			* ray->delta_dist_y;
 	}
 }
 
@@ -54,18 +58,17 @@ void	ray_init(t_scene *sc, int x, t_ray *ray)
 double	ray_get_dist(t_scene *sc, t_ray *ray)
 {
 	if (ray->side == 0 || ray->side == 1)
-		ray->perp_wall_dist = (ray->map_x - sc->plr.pos_x + (1 - ray->step_x) / 2) / ray->dir_x;
+		ray->perp_wall_dist = (ray->map_x - sc->plr.pos_x
+				+ (1 - ray->step_x) / 2) / ray->dir_x;
 	else
-		ray->perp_wall_dist = (ray->map_y - sc->plr.pos_y + (1 - ray->step_y) / 2) / ray->dir_y;
+		ray->perp_wall_dist = (ray->map_y - sc->plr.pos_y
+				+ (1 - ray->step_y) / 2) / ray->dir_y;
 	ray->line_hg = (int)(sc->set.proj.hg / ray->perp_wall_dist);
 	return (ray->perp_wall_dist);
 }
 
-void	dda(t_scene *sc, t_ray *ray, int x)
+void	dda(t_scene *sc, t_ray *ray)
 {
-	int	s;
-
-	s = 0;
 	while (ray->hit == 0)
 	{
 		if (ray->side_dist_x < ray->side_dist_y)
@@ -86,14 +89,7 @@ void	dda(t_scene *sc, t_ray *ray, int x)
 			else
 				ray->side = 3;
 		}
-		if (sc->map.str[ray->map_y * sc->map.size_x + ray->map_x] ==  '2')
-		{
-			sc->spt_buffer[s].dist = ray_get_dist(sc, ray);
-			sc->spt_buffer[s].x = x;
-			sc->spt_buffer[s].id = '2';
-			s++;
-		}
-		if (sc->map.str[ray->map_y * sc->map.size_x + ray->map_x] ==  '1')
+		if (sc->map.str[ray->map_y * sc->map.size_x + ray->map_x] == '1')
 			ray->hit = 1;
 	}
 }
@@ -105,22 +101,14 @@ void	raycast(t_scene *sc)
 
 	if (BONUS)
 		ground_render(sc);
+	sc->spt.count = 0;
 	x = 0;
 	while (x < sc->set.proj.wd)
 	{
 		ray_init(sc, x, &ray);
-		dda(sc, &ray, x);
-		ray_get_dist(sc, &ray);
+		dda(sc, &ray);
+		sc->spt.z_buffer[x] = ray_get_dist(sc, &ray);
 		ray_draw(sc, &ray, x);
 		x++;
-	}
-	int i;
-	i = 0;
-	while (i < sc->nb_sprite)
-	{
-		int spt_y;
-		spt_y = sc->set.proj.half_hg - (sc->texs[TEX_S].hg / 2);
-		tex_put(sc, &sc->texs[TEX_S], sc->spt_buffer[i].x, spt_y);
-		i++;
 	}
 }

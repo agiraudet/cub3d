@@ -6,32 +6,91 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 15:41:51 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/07 19:09:50 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/17 19:26:54 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	sprite_swap(t_scene *sc, int i)
-{
-	t_sprite	spt_tmp;
+#include "cub3d.h"
 
-	spt_tmp = sc->spt_buffer[i];
-	sc->spt_buffer[i] = sc->spt_buffer[i - 1];
-	sc->spt_buffer[i - 1] = spt_tmp;
+void	spt_init(t_scene *sc)
+{
+	int		x;
+	int		y;
+	int		i;
+
+	i = 0;
+	y = 0;
+	while (y < sc->map.size_y)
+	{
+		x = 0;
+		while (x < sc->map.size_x)
+		{
+			if (sc->map.str[y * sc->map.size_x + x] == '2')
+			{
+				sc->spt.buf[i].x = x + 0.5;
+				sc->spt.buf[i].y = y + 0.5;
+				sc->spt.buf[i].dist = 0;
+				sc->spt.buf[i].hit = 0;
+				i++;
+			}
+			x++;
+		}
+		y++;
+	}
 }
 
-void	sprite_sort(t_scene *sc)
+void	spt_get_dist(t_scene *sc)
 {
 	int		i;
 
-	i = 1;
-	while (i < sc->nb_sprite)
+	i = 0;
+	while (i < sc->spt.nb)
 	{
-		if (sc->spt_buffer[i].dist < sc->spt_buffer[i - 1].dist)
-		{
-			sprite_swap(sc, i);
-			i = 1;
-		}
-		else
-			i++;
+		sc->spt.buf[i].dist = ((sc->plr.pos_x - sc->spt.buf[i].x)
+				* (sc->plr.pos_x - sc->spt.buf[i].x)
+				+ (sc->plr.pos_y - sc->spt.buf[i].y)
+				* (sc->plr.pos_y - sc->spt.buf[i].y));
+		i++;
 	}
+}
+
+void	spt_swap(t_sptbuf *sp1, t_sptbuf *sp2)
+{
+	t_sptbuf tmp;
+
+	tmp = *sp1;
+	*sp1 = *sp2;
+	*sp2 = tmp;
+}
+
+void	spt_sort(t_spt *spt)
+{
+	int		i;
+
+	if (spt->nb <= 1)
+		return ;
+	i = 1;
+	while (i < spt->nb)
+	{
+		if (spt->buf[i].dist > spt->buf[i - 1].dist)
+		{
+			spt_swap(&spt->buf[i], &spt->buf[i - 1]);
+			i = 0;
+		}
+		i++;
+	}
+}
+
+int		spt_exist(t_scene *sc, int x, int y)
+{
+	int i;
+
+	i = 0;
+	while (i < sc->spt.count)
+	{
+		if (sc->spt.buf[i].x == x && sc->spt.buf[i].y == y)
+			return (1);
+		i++;
+	}
+	return (0);
 }

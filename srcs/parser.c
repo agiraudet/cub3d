@@ -6,13 +6,13 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 17:46:08 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/24 15:27:43 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/18 00:52:07 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-int			cmp_id(const char *str, const char *id)
+int		cmp_id(const char *str, const char *id)
 {
 	if (*str == *id && *(str + 1) == *(id + 1))
 		return (1);
@@ -30,6 +30,7 @@ void	setting_res_set(t_settings *sets, const char *line)
 	i = 0;
 	while (values[i])
 		free(values[i++]);
+	free(values);
 }
 
 void	setting_tex_set(char **tex, const char *line)
@@ -46,6 +47,7 @@ void	setting_tex_set(char **tex, const char *line)
 			free(values[i]);
 		i++;
 	}
+	free(values);
 }
 
 void	setting_color_set(unsigned int *color, const char *line)
@@ -58,12 +60,13 @@ void	setting_color_set(unsigned int *color, const char *line)
 	i = 0;
 	while (values[i])
 		free(values[i++]);
+	free(values);
 }
 
 void	wip_str(t_map *map)
 {
-	char *str;
-	int	i;
+	char	*str;
+	int		i;
 
 	str = map->str;
 	i = 0;
@@ -80,6 +83,7 @@ void	map_put(t_scene *sc)
 	int y;
 	int x;
 
+	y = 0;
 	while (y < sc->map.size_y)
 	{
 		x = 0;
@@ -121,11 +125,11 @@ char	*map_correct_len(char *str, int old_len, int new_len, int nb_line)
 
 char	*map_add_len(int new_len, const char *line)
 {
-	char *new_line;
-	int	i;
+	char	*new_line;
+	int		i;
 
 	new_line = malloc(sizeof(char) * new_len + 1);
-	i  = 0;
+	i = 0;
 	while (i < new_len)
 	{
 		if (*line)
@@ -134,14 +138,14 @@ char	*map_add_len(int new_len, const char *line)
 			new_line[i++] = ' ';
 	}
 	new_line[i] = '\0';
-	return(new_line);
+	return (new_line);
 }
 
 void	map_add(t_map *map, const char *line)
 {
 	static int	nb_line = 0;
-	char	*tmp;
-	int		len;
+	char		*tmp;
+	int			len;
 
 	len = ft_strlen(line);
 	if (len > map->size_x)
@@ -159,11 +163,43 @@ void	map_add(t_map *map, const char *line)
 	nb_line++;
 }
 
+void	parse_line(t_scene *sc, const char *line)
+{
+	if (cmp_id(line, "R "))
+		setting_res_set(&sc->set, line);
+	else if (cmp_id(line, "NO"))
+		setting_tex_set(&sc->set.tex_no, line);
+	else if (cmp_id(line, "SO"))
+		setting_tex_set(&sc->set.tex_so, line);
+	else if (cmp_id(line, "WE"))
+		setting_tex_set(&sc->set.tex_we, line);
+	else if (cmp_id(line, "EA"))
+		setting_tex_set(&sc->set.tex_ea, line);
+	else if (cmp_id(line, "S "))
+		setting_tex_set(&sc->set.tex_s, line);
+	else if (cmp_id(line, "S1"))
+		setting_tex_set(&sc->set.tex_s1, line);
+	else if (cmp_id(line, "S2"))
+		setting_tex_set(&sc->set.tex_s2, line);
+	else if (cmp_id(line, "F "))
+		setting_color_set(&sc->set.color_f, line);
+	else if (cmp_id(line, "C "))
+		setting_color_set(&sc->set.color_c, line);
+	else if (cmp_id(line, "TF") && BONUS)
+		setting_tex_set(&sc->set.tex_f, line);
+	else if (cmp_id(line, "BG") && BONUS)
+		setting_tex_set(&sc->set.tex_bg, line);
+	else if (ft_strchr(" 1", *line) && *line)
+		map_add(&sc->map, line);
+}
+
 int		parse_file(t_scene *sc, char *path)
 {
 	int		fd;
 	char	*line;
 
+	if (!check_extension(path))
+		return (0);
 	fd = open(path, O_RDONLY);
 	if (fd == -1)
 	{
@@ -172,30 +208,14 @@ int		parse_file(t_scene *sc, char *path)
 	}
 	while (get_next_line(fd, &line) > 0)
 	{
-		if (cmp_id(line, "R "))
-			setting_res_set(&sc->set, line);
-		else if (cmp_id(line, "NO"))
-			setting_tex_set(&sc->set.tex_no, line);
-		else if (cmp_id(line, "SO"))
-			setting_tex_set(&sc->set.tex_so, line);
-		else if (cmp_id(line, "WE"))
-			setting_tex_set(&sc->set.tex_we, line);
-		else if (cmp_id(line, "EA"))
-			setting_tex_set(&sc->set.tex_ea, line);
-		else if (cmp_id(line, "S "))
-			setting_tex_set(&sc->set.tex_s, line);
-		else if (cmp_id(line, "F "))
-			setting_color_set(&sc->set.color_f, line);
-		else if (cmp_id(line, "C "))
-			setting_color_set(&sc->set.color_c, line);
-		else if (cmp_id(line, "TF") && BONUS)
-			setting_tex_set(&sc->set.tex_f, line);
-		else if (cmp_id(line, "BG") && BONUS)
-			setting_tex_set(&sc->set.tex_bg, line);
-		else if (ft_strchr(" 1", *line) && *line)
-			map_add(&sc->map, line);
+		parse_line(sc, line);
 		free(line);
 	}
-	map_put(sc);
+	free(line);
+	if (check_map(sc) == 0)
+	{
+		error_set(FILE_ERROR, "map not closed");
+		return (0);
+	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 #    By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/04 10:43:09 by agiraude          #+#    #+#              #
-#    Updated: 2020/12/20 23:10:32 by agiraude         ###   ########.fr        #
+#    Updated: 2021/01/17 19:23:39 by agiraude         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,18 +25,23 @@ SRCS_FILES	=	inits.c \
 				main.c \
 				get_next_line.c \
 				get_next_line_utils.c \
+				bitmap.c \
 				raycast.c \
 				parser.c \
 				texture.c \
+				check_map.c \
 				utils.c \
+				sprite.c \
+				sprite_render.c \
 				minimap.c \
+				destroy.c \
 				render.c
 
 SRCS		=	$(addprefix $(SRCS_DIR), $(SRCS_FILES))
 
 OBJS		=	$(SRCS:.c=.o)
 
-CC			=	gcc
+CC			=	clang
 
 BONUS		= 	1
 
@@ -60,9 +65,12 @@ $(LIBFT):
 $(NAME):		$(OBJS) $(LIBFT)
 				$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -L $(MLX_DIR) -L $(LIBFT_DIR) $(DEP) -I $(INC_DIR)
 
-debug:			$(OBJS) $(LIBFT)
-				$(CC) $(CFLAGS) -g -o $(NAME) $(SRCS) -L $(MLX_DIR) -L $(LIBFT_DIR) $(DEP)
+gflag:			$(OBJS) $(LIBFT)
+				$(CC) $(CFLAGS) -g -o $(NAME) $(SRCS) -L $(MLX_DIR) -L $(LIBFT_DIR) $(DEP) -I $(INC_DIR)
 
+debug:			
+				make fclean
+				make gflag
 clean:
 				$(RM) $(OBJS)
 				make clean -C $(LIBFT_DIR)

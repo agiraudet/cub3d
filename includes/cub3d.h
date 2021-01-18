@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 23:43:43 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/07 19:13:34 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/18 01:12:53 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,48 @@
 
 # include <math.h>
 # include <mlx.h>
+# include <X11/X.h>
+# include <X11/keysym.h>
 # include <stdlib.h>
+# include <errno.h>
 # include <fcntl.h>
 # include "get_next_line.h"
 # include "../libft/includes/libft.h"
 # include "settings.h"
 
+typedef struct	s_sptbuf
+{
+	double			x;
+	double			y;
+	int				hit;
+	double			dist;
+}				t_sptbuf;
+
+typedef struct	s_spt_render
+{
+	double		inv_det;
+	double		tsfm_x;
+	double		tsfm_y;
+	double		x;
+	double		y;
+	int			screen_x;
+	int			hg;
+	int			wd;
+	int			draw_start_y;
+	int			draw_start_x;
+	int			draw_end_y;
+	int			draw_end_x;
+}				t_spt_render;
+
 typedef struct	s_sprite
 {
-	double		dist;
-	int			x;
-	char		id;
-}				t_sprite;
+	int			nb;
+	double		*z_buffer;
+	t_sptbuf	*buf;
+	t_spt_render	data;
+	int			count;
+}				t_spt;
+
 
 typedef struct	s_player
 {
@@ -64,6 +94,7 @@ typedef struct		s_view
 {
 	void			*mlx;
 	void			*win;
+	int				win_alive;
 }					t_view;
 
 typedef struct		s_rect
@@ -133,12 +164,15 @@ typedef struct		s_settings
 	char			*tex_we;
 	char			*tex_ea;
 	char			*tex_s;
+	char			*tex_s1;
+	char			*tex_s2;
 	char			*tex_f;
 	char			*tex_bg;
 	unsigned int	color_f;
 	unsigned int	color_c;
 	char			*map;
 	int				mini;
+	int				prnt_scr;
 	t_proj			proj;
 }					t_settings;
 
@@ -150,6 +184,7 @@ typedef struct		s_keys
 	int				rotr;
 	int				strafl;
 	int				strafr;
+	int				esc;
 }					t_keys;
 
 typedef struct		s_map
@@ -167,6 +202,20 @@ typedef struct		s_error
 	char			*msg;
 }					t_error;
 
+typedef struct		s_dir
+{
+	int				up;
+	int				down;
+	int				left;
+	int				right;
+}					t_dir;
+
+typedef struct	s_anim
+{
+	int				frame;
+	int				speed;
+}				t_anim;
+
 
 typedef struct		s_scene
 {
@@ -178,12 +227,13 @@ typedef struct		s_scene
 	t_minimap		mini;
 	t_tex			*texs;
 	t_tex			img_buf;
-	t_sprite		*spt_buffer;
-	int				nb_sprite;
+	t_spt			spt;
+	t_dir			dir;
+	t_anim			anim;
 	int				nb_tex;
 }					t_scene;
 
-t_scene				*scene_init(char *path);
+t_scene				*scene_init(char *path, int prnt_scr);
 int					parse_file(t_scene *sc, char *path);
 int					key_in(int k, t_keys *keys);
 int					key_out(int k, t_keys *keys);
@@ -193,10 +243,10 @@ float				deg_to_rad(int angle);
 unsigned int		rgb_to_i(int a, int r, int g, int b);
 int					fix_angle(float a);
 t_rect				rect_init(int x, int y, int wd, int hg);
-void				rect_draw(t_scene *sc, t_rect rect, int color, int outline);
+void				rect_draw(t_scene *sc, t_rect rect, unsigned int color, int outline);
 void				redraw_view(t_scene *sc);
-void				i_to_rgb(int color, int *rgba);
-void				pixel_put_buffer(t_scene *sc, int x, int y, int color);
+void				i_to_rgb(unsigned int color, int *rgba);
+void				pixel_put_buffer(t_scene *sc, int x, int y, unsigned int color);
 void				minimap_draw(t_scene *sc);
 void				raycast(t_scene *sc);
 void				error_set(int type, char *msg);
@@ -208,7 +258,18 @@ void		ceil_render(t_scene *sc, int x, t_ray *ray);
 void		floor_render(t_scene *sc, int x, t_ray *ray);
 void		strip_render(t_scene *sc, int x, t_ray *ray);
 void	ground_render(t_scene *sc);
-
-
+int		check_map(t_scene *sc);
+int		check_extension(char *file);
 void	tex_put(t_scene *sc, t_tex *tex, int x, int y);
+
+void		spt_init(t_scene *sc);
+void		spt_get_dist(t_scene *sc);
+void		spt_sort(t_spt *spt);
+void		sp_d(t_scene *sc);
+void		spt_draw(t_scene *sc);
+
+void				anim_next_frame(t_scene *sc);
+t_tex				*tex_load2(t_view *view, char *path);
+int					bmp_to_file(t_tex *img, char *path);
+int					scene_destroy(t_scene *sc);
 #endif
