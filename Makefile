@@ -6,7 +6,7 @@
 #    By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/04 10:43:09 by agiraude          #+#    #+#              #
-#    Updated: 2021/01/21 15:58:21 by agiraude         ###   ########.fr        #
+#    Updated: 2021/01/21 16:24:53 by agiraude         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,7 @@ SRCS_FILES	=	anim_bonus.c \
 				map.c \
 				minimap_bonus.c \
 				parser.c \
+				parser_bonus.c \
 				player.c \
 				player_set.c \
 				raycast.c \
@@ -46,7 +47,7 @@ SRCS_FILES	=	anim_bonus.c \
 
 SRCS		=	$(addprefix $(SRCS_DIR), $(SRCS_FILES))
 
-SRCS_BONUS	=	$(SRCS:.c=_b.o)
+OBJS_BONUS	=	$(SRCS:.c=_b.o)
 
 OBJS		=	$(SRCS:.c=.o)
 
@@ -60,11 +61,11 @@ NAME		=	cub3d
 
 DEP			=	-lft -lmlx_Linux -lXext -lX11 -lm
 
-.c.o:
+%.o:			%.c
 				$(CC) $(CFLAGS) -D BONUS=0 -c $< -o $(<:.c=.o) -I $(INC_DIR)
 
-.c_b.o:
-				$(CC) $(CFLAGS) -D BONUS=1 -c $< -o $(<:.c=.o) -I $(INC_DIR)
+%_b.o:			%.c
+				$(CC) $(CFLAGS) -D BONUS=1 -c $< -o $(<:.c=_b.o) -I $(INC_DIR)
 
 
 all:			$(NAME)
@@ -87,6 +88,7 @@ debug:
 				make gflag
 clean:
 				$(RM) $(OBJS)
+				$(RM) $(OBJS_BONUS)
 				make clean -C $(LIBFT_DIR)
 
 fclean:			clean

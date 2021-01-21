@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 23:43:43 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/21 16:08:18 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/21 16:29:33 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,6 @@ typedef struct		s_anim
 	int				speed;
 }					t_anim;
 
-
 typedef struct		s_scene
 {
 	t_settings		set;
@@ -237,6 +236,7 @@ int					key_out(int k, t_keys *keys);
 int					player_move(t_scene *sc);
 int					tex_load(t_scene *sc, int tex_nb, char *path);
 int					fix_angle(float a);
+int					cmp_id(const char *str, const char *id);
 void				spt_get_dist(t_scene *sc);
 void				spt_sort(t_spt *spt);
 void				spt_init(t_scene *sc);

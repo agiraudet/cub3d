@@ -5,6 +5,8 @@ SO ./tex/city/wall2.xpm
 WE ./tex/city/wall3.xpm
 EA ./tex/city/wall4.xpm
 S ./tex/pnj.xpm
+SA ./tex/pnj.xpm
+SB ./tex/pnj_red.xpm
 BG ./tex/night3.xpm
 TF ./tex/city/ground.xpm
 DR ./tex/city/door.xpm
