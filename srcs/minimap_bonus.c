@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 09:58:20 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/21 12:25:20 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/21 16:46:32 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void			minimap_init(t_scene *sc)
 	int	mini_size;
 	int	mini_offset;
 
-	mini_size = sc->set.proj.wd >> 6;
+	mini_size = sc->set.proj.wd / 40;
 	mini_offset = mini_size >> 4;
 	sc->mini.size = mini_size / PROJ_SCALE;
 	sc->mini.x = mini_offset / PROJ_SCALE;
@@ -63,7 +63,8 @@ void			minimap_draw(t_scene *sc)
 		}
 		y++;
 	}
-	tile = rect_init(sc->plr.pos_x * sc->mini.size + sc->mini.x - 2,
-	sc->plr.pos_y * sc->mini.size + sc->mini.y - 2, 4, 4);
+	tile = rect_init(sc->plr.pos_x * sc->mini.size + sc->mini.x - 1,
+	(sc->plr.pos_y * sc->mini.size + sc->mini.y) - 1,
+	sc->mini.size - 1, sc->mini.size - 1);
 	rect_draw(sc, tile, YELLOW, -1);
 }

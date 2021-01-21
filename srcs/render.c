@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/19 23:17:19 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/21 14:53:32 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/21 16:34:28 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,10 @@ void	strip_render(t_scene *sc, int x, t_ray *ray)
 
 void	ray_draw(t_scene *sc, t_ray *ray, int x)
 {
-	ray->draw_start = -ray->line_hg / 2 + sc->set.proj.hg / 2;
+	ray->draw_start = ceil((double)-ray->line_hg / 2.0 + (double)sc->set.proj.hg / 2.0);
 	if (ray->draw_start < 0)
 		ray->draw_start = 0;
-	ray->draw_end = ray->line_hg / 2 + sc->set.proj.hg / 2;
+	ray->draw_end = ceil((double)ray->line_hg / 2.0 + (double)sc->set.proj.hg / 2.0);
 	if (ray->draw_end >= sc->set.proj.hg)
 		ray->draw_end = sc->set.proj.hg;
 	if (BONUS)
