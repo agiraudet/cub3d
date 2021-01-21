@@ -6,17 +6,17 @@
 #    By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/04 10:43:09 by agiraude          #+#    #+#              #
-#    Updated: 2021/01/21 16:24:53 by agiraude         ###   ########.fr        #
+#    Updated: 2021/01/21 17:17:50 by agiraude         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-MLX_DIR		= 	/usr/local/lib/minilibx
+MLX_DIR		= 	minilibx-linux
 
 LIBFT_DIR	=	libft/
 
 LIBFT		=	libft.a
 
-INC_DIR		=	includes/
+INC_DIR		=	includes/ -I $(MLX_DIR)
 
 SRCS_DIR	=	srcs/
 
