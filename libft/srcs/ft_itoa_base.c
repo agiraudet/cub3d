@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/02 12:22:42 by agiraude          #+#    #+#             */
-/*   Updated: 2020/12/02 12:52:05 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/21 21:02:56 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	check_error(char *base, long baselen)
 	return (1);
 }
 
-char	*ft_itoa_base(long nb, char *base)
+char		*ft_itoa_base(long nb, char *base)
 {
 	char	tmp[100];
 	char	*ret;

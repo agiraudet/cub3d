@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 15:38:19 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/21 15:38:33 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/21 20:44:55 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,4 +23,3 @@ void	parse_bonus(t_scene *sc, const char *line)
 	else if (cmp_id(line, "BG"))
 		setting_tex_set(&sc->set.tex_path[TEX_BG], line);
 }
-
