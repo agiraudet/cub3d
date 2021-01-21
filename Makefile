@@ -6,7 +6,7 @@
 #    By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/04 10:43:09 by agiraude          #+#    #+#              #
-#    Updated: 2021/01/21 17:38:18 by agiraude         ###   ########.fr        #
+#    Updated: 2021/01/21 20:40:38 by agiraude         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,30 +22,30 @@ INC_DIR		=	includes/ -I $(MLX_DIR)
 
 SRCS_DIR	=	srcs/
 
-SRCS_FILES	=	anim_bonus.c \
-				bitmap.c \
-				check_map.c \
-				destroy.c \
-				get_next_line.c \
-				get_next_line_utils.c \
-				inits.c \
-				loop.c \
-				main.c \
-				map.c \
-				minimap_bonus.c \
-				parser.c \
-				parser_bonus.c \
-				player.c \
-				player_set.c \
-				raycast.c \
-				rect_bonus.c \
-				render_bonus.c \
-				render.c \
-				settings.c \
-				sprite.c \
-				sprite_render.c \
-				texture.c \
-				utils.c
+SRCS_FILES	=	main.c \
+				bonus/anim_bonus.c \
+				bonus/minimap_bonus.c \
+				bonus/parser_bonus.c \
+				bonus/rect_bonus.c \
+				bonus/render_bonus.c \
+				engine/loop.c \
+				engine/raycast.c \
+				engine/render.c \
+				managers/destroy.c \
+				managers/inits.c \
+				managers/player.c \
+				managers/player_set.c \
+				managers/settings.c \
+				managers/texture.c \
+				sprites/sprite.c \
+				sprites/sprite_render.c \
+				utils/bitmap.c \
+				utils/check_map.c \
+				utils/get_next_line.c \
+				utils/get_next_line_utils.c \
+				utils/map.c \
+				utils/parser.c \
+				utils/utils.c
 
 SRCS		=	$(addprefix $(SRCS_DIR), $(SRCS_FILES))
 
