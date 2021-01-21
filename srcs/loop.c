@@ -6,11 +6,29 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 03:25:08 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/18 00:58:09 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/21 12:58:08 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d.h"
+#include "cub3d.h"
+
+void	hook_init(t_scene *sc)
+{
+	mlx_loop_hook(sc->view.mlx, &player_move, sc);
+	mlx_hook(sc->view.win, KeyPress, KeyPressMask, &key_in, &sc->key);
+	mlx_hook(sc->view.win, KeyRelease, KeyReleaseMask, &key_out, &sc->key);
+}
+
+void	key_init(t_scene *sc)
+{
+	sc->key.up = 0;
+	sc->key.down = 0;
+	sc->key.rotl = 0;
+	sc->key.rotr = 0;
+	sc->key.strafl = 0;
+	sc->key.strafr = 0;
+	sc->key.esc = 0;
+}
 
 int		key_in(int k, t_keys *keys)
 {
@@ -50,6 +68,8 @@ int		key_out(int k, t_keys *keys)
 
 void	redraw_view(t_scene *sc)
 {
+	if (sc->key.esc)
+		scene_destroy(sc);
 	raycast(sc);
 	spt_draw(sc);
 	if (BONUS)
@@ -64,74 +84,4 @@ void	redraw_view(t_scene *sc)
 		sc->set.prnt_scr = 0;
 		bmp_to_file(&sc->img_buf, "prnt.bmp");
 	}
-}
-
-void	player_go(t_scene *sc, int dir)
-{
-	float	new_x;
-	float	new_y;
-
-	new_x = sc->plr.pos_x + sc->plr.dir_x * dir * PLR_SPEED;
-	new_y = sc->plr.pos_y + sc->plr.dir_y * dir * PLR_SPEED;
-	if (sc->map.str[(int)new_y * sc->map.size_x + (int)new_x] != '1')
-	{
-		sc->plr.pos_x = new_x;
-		sc->plr.pos_y = new_y;
-	}
-}
-
-void	player_rot(t_scene *sc, int dir)
-{
-	double old_dir;
-	double old_plane_x;
-
-	old_dir = sc->plr.dir_x;
-	sc->plr.dir_x = sc->plr.dir_x * cos(dir * ROT_SPEED)
-		- sc->plr.dir_y * sin(dir * ROT_SPEED);
-	sc->plr.dir_y = old_dir * sin(dir * ROT_SPEED)
-		+ sc->plr.dir_y * cos(dir * ROT_SPEED);
-	old_plane_x = sc->plr.plan_x;
-	sc->plr.plan_x = sc->plr.plan_x * cos(dir * ROT_SPEED)
-		- sc->plr.plan_y * sin(dir * ROT_SPEED);
-	sc->plr.plan_y = old_plane_x * sin(dir * ROT_SPEED)
-		+ sc->plr.plan_y * cos(dir * ROT_SPEED);
-}
-
-void	player_straf(t_scene *sc, int dir)
-{
-	double	new_x;
-	double	new_y;
-	double	straf_ang_x;
-	double	straf_ang_y;
-
-	dir *= -1;
-	straf_ang_x = sc->plr.dir_y;
-	straf_ang_y = -sc->plr.dir_x;
-	new_x = sc->plr.pos_x + straf_ang_x * dir * PLR_SPEED;
-	new_y = sc->plr.pos_y + straf_ang_y * dir * PLR_SPEED;
-	if (sc->map.str[(int)new_y * sc->map.size_x + (int)new_x] != '1')
-	{
-		sc->plr.pos_x = new_x;
-		sc->plr.pos_y = new_y;
-	}
-}
-
-int		player_move(t_scene *sc)
-{
-	if (sc->key.rotl)
-		player_rot(sc, sc->dir.left);
-	if (sc->key.rotr)
-		player_rot(sc, sc->dir.right);
-	if (sc->key.up)
-		player_go(sc, sc->dir.up);
-	if (sc->key.down)
-		player_go(sc, sc->dir.down);
-	if (sc->key.strafl)
-		player_straf(sc, sc->dir.left);
-	if (sc->key.strafr)
-		player_straf(sc, sc->dir.right);
-	if (sc->key.esc)
-		scene_destroy(sc);
-	redraw_view(sc);
-	return (1);
 }

@@ -1,16 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minimap.c                                          :+:      :+:    :+:   */
+/*   minimap_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/19 16:20:56 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/18 01:17:34 by agiraude         ###   ########.fr       */
+/*   Created: 2021/01/21 09:58:20 by agiraude          #+#    #+#             */
+/*   Updated: 2021/01/21 12:25:20 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d.h"
+#include "cub3d.h"
+
+void			minimap_init(t_scene *sc)
+{
+	int	mini_size;
+	int	mini_offset;
+
+	mini_size = sc->set.proj.wd >> 6;
+	mini_offset = mini_size >> 4;
+	sc->mini.size = mini_size / PROJ_SCALE;
+	sc->mini.x = mini_offset / PROJ_SCALE;
+	sc->mini.y = mini_offset / PROJ_SCALE;
+	sc->mini.show = MINI_SHOW;
+}
 
 unsigned int	minimap_get_color(t_scene *sc, int x, int y)
 {
@@ -53,46 +66,4 @@ void			minimap_draw(t_scene *sc)
 	tile = rect_init(sc->plr.pos_x * sc->mini.size + sc->mini.x - 2,
 	sc->plr.pos_y * sc->mini.size + sc->mini.y - 2, 4, 4);
 	rect_draw(sc, tile, YELLOW, -1);
-}
-
-t_tex		*tex_load2(t_view *view, char *path)
-{
-	t_tex	*tex;
-
-	tex = malloc(sizeof(t_tex));
-	if (!tex)
-	{
-		error_set(1, "tex");
-		return (0);
-	}
-	tex->ptr = mlx_xpm_file_to_image(view->mlx, path, &tex->wd, &tex->hg);
-	if (!tex->ptr)
-	{
-		free(tex);
-		error_set(2, path);
-		return (0);
-	}
-	tex->data = mlx_get_data_addr(tex->ptr, &tex->bpp, &tex->line_len, &tex->endian);
-	if (!tex->data)
-	{
-		error_set(2, path);
-		free(tex->ptr);
-		free(tex);
-		return (0);
-	}
-	return (tex);
-}
-
-void		anim_next_frame(t_scene *sc)
-{
-	if (sc->anim.speed >= ANIM_SPEED)
-	{
-		sc->anim.speed = 0;
-		if (sc->anim.frame == TEX_S1)
-			sc->anim.frame = TEX_S2;
-		else
-			sc->anim.frame = TEX_S1;
-	}
-	else
-		sc->anim.speed += 1;
 }

@@ -6,12 +6,12 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 23:48:12 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/18 01:09:41 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/21 15:31:51 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SETTING_H
-# define SETTING_H
+#ifndef SETTINGS_H
+# define SETTINGS_H
 
 # define PROJ_SCALE 2
 
@@ -47,7 +47,7 @@
 # define K_ROT_R XK_Right
 # define K_ESC XK_Escape
 
-# define MALLOC_ERROr 1
+# define MALLOC_ERROR 1
 # define PATH_ERROR 2
 # define FILE_ERROR 3
 # define ARG_ERROR 4

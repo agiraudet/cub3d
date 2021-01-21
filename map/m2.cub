@@ -3,7 +3,6 @@ R 1032 516
 NO ./textures/bluestone.xpm
 SO ./textures/colorstone.xpm
 WE ./textures/greystone.xpm
-EA ./textures/redbrick.xpm
 S ./textures/pillar.xpm
 
 F 117, 142, 79

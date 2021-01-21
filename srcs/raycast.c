@@ -6,11 +6,11 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/19 22:46:08 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/16 18:03:29 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/21 14:53:14 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d.h"
+#include "cub3d.h"
 
 void	ray_init_step(t_scene *sc, t_ray *ray)
 {

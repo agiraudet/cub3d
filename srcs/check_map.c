@@ -6,11 +6,11 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/11 10:27:14 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/16 17:40:41 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/21 14:52:48 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d.h"
+#include "cub3d.h"
 
 int		check_around(t_scene *sc, int y, int x)
 {
@@ -66,7 +66,7 @@ int		check_extension(char *file)
 	file += i;
 	if (ft_strncmp(file, ".cub", 4) != 0)
 	{
-		error_set(FILE_ERROR, "wrong extension");
+		error_set(FILE_ERROR, "wrong type");
 		return (0);
 	}
 	return (1);

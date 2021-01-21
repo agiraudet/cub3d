@@ -6,11 +6,11 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 17:41:55 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/18 01:08:28 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/21 14:53:01 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d.h"
+#include "cub3d.h"
 
 t_error		g_error;
 
@@ -26,11 +26,11 @@ int		error_exit(void)
 	if (g_error.flag)
 	{
 		ft_putendl("Error");
-		if (g_error.type == 1)
+		if (g_error.type == MALLOC_ERROR)
 			ft_putstr("Memory allocation failed for: ");
-		if (g_error.type == 2)
+		if (g_error.type == PATH_ERROR)
 			ft_putstr("Failed to load file: ");
-		if (g_error.type == 3)
+		if (g_error.type == FILE_ERROR)
 			ft_putstr("Bad .cub file: ");
 		if (g_error.type == ARG_ERROR)
 			ft_putstr("Arguments error: ");
@@ -69,18 +69,17 @@ int		arg_parse(int argc, char **argv)
 int		main(int argc, char **argv)
 {
 	t_scene *sc;
-	t_view	view;
 	int		arg_check;
 
+	g_error.flag = 0;
 	arg_check = arg_parse(argc, argv);
 	if (arg_check == 0)
 		return (error_exit());
-	sc = scene_init(argv[1], arg_check);
+	sc = scene_init_1(argv[1], arg_check);
 	if (!sc)
 		return (error_exit());
 	mlx_loop(sc->view.mlx);
 	sc->view.win_alive = 0;
-	view = sc->view;
 	scene_destroy(sc);
 	return (0);
 }

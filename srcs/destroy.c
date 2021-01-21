@@ -6,48 +6,50 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/14 15:07:37 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/17 15:21:42 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/21 15:08:41 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-#include <X11/Xlib.h>
 
-void	tex_destroy(t_scene *sc, t_tex *tex)
+void	spt_destroy(t_scene *sc)
 {
-	mlx_destroy_image(sc->view.mlx, tex->ptr);
+	free(sc->spt.z_buffer);
+	free(sc->spt.buf);
+	free(sc->map.str);
 }
 
 void	settings_destroy(t_scene *sc)
 {
-	free(sc->set.tex_no);
-	free(sc->set.tex_so);
-	free(sc->set.tex_we);
-	free(sc->set.tex_ea);
-	free(sc->set.tex_s);
-	if (BONUS)
-	{
-		free(sc->set.tex_f);
-		free(sc->set.tex_bg);
-	}
+	int		i;
+
+	i = 0;
+	while (i < sc->nb_tex)
+		free(sc->set.tex_path[i++]);
+	free(sc->set.tex_path);
 }
 
-int		scene_destroy(t_scene *sc)
+void	textures_destroy(t_scene *sc)
 {
 	int		i;
 
-	printf("clean\n");
 	i = 0;
-	while (i < sc->nb_tex)
-		tex_destroy(sc, &sc->texs[i++]);
-	free(sc->texs);
-	tex_destroy(sc, &sc->img_buf);
+	while (i < sc->set.nb_tex_loaded)
+		mlx_destroy_image(sc->view.mlx, sc->texs[i++].ptr);
+}
+
+void	scene_destroy(t_scene *sc)
+{
+	t_view	view;
+
+	textures_destroy(sc);
 	settings_destroy(sc);
-	free(sc->spt.z_buffer);
-	free(sc->spt.buf);
-	free(sc->map.str);
+	free(sc->texs);
+	mlx_destroy_image(sc->view.mlx, sc->img_buf.ptr);
+	spt_destroy(sc);
+	view = sc->view;
 	if (sc->view.win_alive)
 		mlx_destroy_window(sc->view.mlx, sc->view.win);
 	free(sc);
-	exit(0);
+	exit(error_exit());
 }

@@ -6,16 +6,44 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 23:53:26 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/17 19:29:54 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/21 15:19:14 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d.h"
+#include "cub3d.h"
+
+int				tex_init(t_scene *sc)
+{
+	int		i;
+
+	sc->set.nb_tex_loaded = 0;
+	sc->texs = malloc(sizeof(t_tex) * sc->nb_tex);
+	if (!sc->texs)
+	{
+		error_set(MALLOC_ERROR, "texs array");
+		return (0);
+	}
+	i = 0;
+	while (i < sc->nb_tex)
+	{
+		if (!tex_load(sc, i, sc->set.tex_path[i]))
+		{
+			sc->set.nb_tex_loaded = i;
+			error_set(PATH_ERROR, "wrong texture file");
+			return (0);
+		}
+		i++;
+	}
+	sc->set.nb_tex_loaded = i;
+	return (1);
+}
 
 int				tex_load(t_scene *sc, int tex_nb, char *path)
 {
 	t_tex	tex;
 
+	if (!path)
+		return (0);
 	tex.ptr = mlx_xpm_file_to_image(sc->view.mlx, path, &tex.wd, &tex.hg);
 	if (!tex.ptr)
 	{

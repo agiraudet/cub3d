@@ -6,7 +6,7 @@
 #    By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/04 10:43:09 by agiraude          #+#    #+#              #
-#    Updated: 2021/01/17 19:23:39 by agiraude         ###   ########.fr        #
+#    Updated: 2021/01/21 15:58:21 by agiraude         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,32 +20,39 @@ INC_DIR		=	includes/
 
 SRCS_DIR	=	srcs/
 
-SRCS_FILES	=	inits.c \
-				loop.c \
-				main.c \
+SRCS_FILES	=	anim_bonus.c \
+				bitmap.c \
+				check_map.c \
+				destroy.c \
 				get_next_line.c \
 				get_next_line_utils.c \
-				bitmap.c \
-				raycast.c \
+				inits.c \
+				loop.c \
+				main.c \
+				map.c \
+				minimap_bonus.c \
 				parser.c \
-				texture.c \
-				check_map.c \
-				utils.c \
+				player.c \
+				player_set.c \
+				raycast.c \
+				rect_bonus.c \
+				render_bonus.c \
+				render.c \
+				settings.c \
 				sprite.c \
 				sprite_render.c \
-				minimap.c \
-				destroy.c \
-				render.c
+				texture.c \
+				utils.c
 
 SRCS		=	$(addprefix $(SRCS_DIR), $(SRCS_FILES))
+
+SRCS_BONUS	=	$(SRCS:.c=_b.o)
 
 OBJS		=	$(SRCS:.c=.o)
 
 CC			=	clang
 
-BONUS		= 	1
-
-CFLAGS		=	-Wall -Wextra -D BONUS=$(BONUS)
+CFLAGS		=	-Wall -Wextra -Werror
 
 RM			=	rm -f
 
@@ -54,7 +61,11 @@ NAME		=	cub3d
 DEP			=	-lft -lmlx_Linux -lXext -lX11 -lm
 
 .c.o:
-				$(CC) $(CFLAGS) -c $< -o $(<:.c=.o) -I $(INC_DIR)
+				$(CC) $(CFLAGS) -D BONUS=0 -c $< -o $(<:.c=.o) -I $(INC_DIR)
+
+.c_b.o:
+				$(CC) $(CFLAGS) -D BONUS=1 -c $< -o $(<:.c=.o) -I $(INC_DIR)
+
 
 all:			$(NAME)
 
@@ -67,6 +78,9 @@ $(NAME):		$(OBJS) $(LIBFT)
 
 gflag:			$(OBJS) $(LIBFT)
 				$(CC) $(CFLAGS) -g -o $(NAME) $(SRCS) -L $(MLX_DIR) -L $(LIBFT_DIR) $(DEP) -I $(INC_DIR)
+
+bonus:			$(OBJS_BONUS) $(LIBFT)
+				$(CC) $(CFLAGS) -o $(NAME) $(OBJS_BONUS) -L $(MLX_DIR) -L $(LIBFT_DIR) $(DEP) -I $(INC_DIR)
 
 debug:			
 				make fclean
