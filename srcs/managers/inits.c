@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 17:43:34 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/21 15:12:47 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/22 11:42:44 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,14 @@ int		view_init(t_scene *sc)
 		sc->set.win_x = screen_x;
 	if (screen_y < sc->set.win_y)
 		sc->set.win_y = screen_y;
-	sc->set.proj.scale = PROJ_SCALE;
-	sc->set.proj.wd = sc->set.win_x / PROJ_SCALE;
-	sc->set.proj.hg = sc->set.win_y / PROJ_SCALE;
-	sc->set.proj.half_wd = sc->set.proj.wd / 2;
-	sc->set.proj.half_hg = sc->set.proj.hg / 2;
+	proj_set(sc);
+	if (sc->set.prnt_scr)
+	{
+		sc->view.win_alive = 0;
+		return (1);
+	}
 	sc->view.win = mlx_new_window(sc->view.mlx,
-			sc->set.win_x, sc->set.win_y, "cub3d");
+		sc->set.win_x, sc->set.win_y, "cub3d");
 	if (!sc->view.win)
 		return (0);
 	sc->view.win_alive = 1;
@@ -94,7 +95,8 @@ int		scene_init_2(t_scene *sc)
 {
 	player_init(sc);
 	key_init(sc);
-	hook_init(sc);
+	if (sc->view.win_alive)
+		hook_init(sc);
 	if (!buffer_init(sc))
 	{
 		settings_destroy(sc);

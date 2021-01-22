@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 03:25:08 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/21 12:58:08 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/22 11:43:49 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	hook_init(t_scene *sc)
 	mlx_loop_hook(sc->view.mlx, &player_move, sc);
 	mlx_hook(sc->view.win, KeyPress, KeyPressMask, &key_in, &sc->key);
 	mlx_hook(sc->view.win, KeyRelease, KeyReleaseMask, &key_out, &sc->key);
+	mlx_hook(sc->view.win, ClientMessage,
+			StructureNotifyMask, &scene_destroy, sc);
 }
 
 void	key_init(t_scene *sc)
@@ -78,10 +80,12 @@ void	redraw_view(t_scene *sc)
 			minimap_draw(sc);
 		anim_next_frame(sc);
 	}
-	mlx_put_image_to_window(sc->view.mlx, sc->view.win, sc->img_buf.ptr, 0, 0);
 	if (sc->set.prnt_scr)
 	{
 		sc->set.prnt_scr = 0;
 		bmp_to_file(&sc->img_buf, "prnt.bmp");
+		sc->view.win_alive = 0;
+		scene_destroy(sc);
 	}
+	mlx_put_image_to_window(sc->view.mlx, sc->view.win, sc->img_buf.ptr, 0, 0);
 }

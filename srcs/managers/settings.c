@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 09:51:04 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/21 15:17:51 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/22 11:42:39 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ int		setting_tex_init(t_scene *sc)
 int		setting_init(t_scene *sc, char *path, int prnt_scr)
 {
 	if (prnt_scr == 2)
+	{
 		sc->set.prnt_scr = 1;
+		sc->view.win = 0;
+	}
 	else
 		sc->set.prnt_scr = 0;
 	sc->map.str = ft_strdup("");

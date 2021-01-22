@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/14 15:07:37 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/21 15:08:41 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/22 11:33:16 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	textures_destroy(t_scene *sc)
 		mlx_destroy_image(sc->view.mlx, sc->texs[i++].ptr);
 }
 
-void	scene_destroy(t_scene *sc)
+int		scene_destroy(t_scene *sc)
 {
 	t_view	view;
 

@@ -6,7 +6,7 @@
 #    By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/04 10:43:09 by agiraude          #+#    #+#              #
-#    Updated: 2021/01/21 20:40:38 by agiraude         ###   ########.fr        #
+#    Updated: 2021/01/22 10:55:44 by agiraude         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -82,7 +82,7 @@ $(NAME):		$(OBJS) $(LIBFT) $(MLX)
 				$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -L $(MLX_DIR) -L $(LIBFT_DIR) $(DEP) -I $(INC_DIR)
 
 gflag:			$(OBJS) $(LIBFT) $(MLX)
-				$(CC) $(CFLAGS) -g -o $(NAME) $(SRCS) -L $(MLX_DIR) -L $(LIBFT_DIR) $(DEP) -I $(INC_DIR)
+				$(CC) $(CFLAGS) -g -o $(NAME) $(OBJS) -L $(MLX_DIR) -L $(LIBFT_DIR) $(DEP) -I $(INC_DIR)
 
 bonus:			$(OBJS_BONUS) $(LIBFT) $(MLX)
 				$(CC) $(CFLAGS) -o $(NAME) $(OBJS_BONUS) -L $(MLX_DIR) -L $(LIBFT_DIR) $(DEP) -I $(INC_DIR)

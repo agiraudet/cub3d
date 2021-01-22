@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 17:41:55 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/21 14:53:01 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/22 11:06:47 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ int		main(int argc, char **argv)
 	sc = scene_init_1(argv[1], arg_check);
 	if (!sc)
 		return (error_exit());
+	if (sc->set.prnt_scr)
+		redraw_view(sc);
 	mlx_loop(sc->view.mlx);
 	sc->view.win_alive = 0;
 	scene_destroy(sc);

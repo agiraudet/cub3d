@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 23:43:43 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/21 16:29:33 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/22 11:39:42 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,6 +237,7 @@ int					player_move(t_scene *sc);
 int					tex_load(t_scene *sc, int tex_nb, char *path);
 int					fix_angle(float a);
 int					cmp_id(const char *str, const char *id);
+int					scene_destroy(t_scene *sc);
 void				spt_get_dist(t_scene *sc);
 void				spt_sort(t_spt *spt);
 void				spt_init(t_scene *sc);
@@ -247,10 +248,10 @@ void				tex_destroy(t_scene *sc, t_tex *tex);
 void				settings_destroy(t_scene *sc);
 void				buffer_destroy(t_scene *sc);
 void				spt_destroy(t_scene *sc);
-void				scene_destroy(t_scene *sc);
 void				setting_res_set(t_settings *sets, const char *line);
 void				setting_tex_set(char **tex, const char *line);
 void				setting_color_set(unsigned int *color, const char *line);
+void				proj_set(t_scene *sc);
 void				map_add(t_map *map, const char *line);
 void				raycast(t_scene *sc);
 void				ground_render(t_scene *sc);

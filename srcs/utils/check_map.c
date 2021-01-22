@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/11 10:27:14 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/21 14:52:48 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/22 11:38:55 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,13 @@ int		check_extension(char *file)
 		return (0);
 	}
 	return (1);
+}
+
+void	proj_set(t_scene *sc)
+{
+	sc->set.proj.scale = PROJ_SCALE;
+	sc->set.proj.wd = sc->set.win_x / PROJ_SCALE;
+	sc->set.proj.hg = sc->set.win_y / PROJ_SCALE;
+	sc->set.proj.half_wd = sc->set.proj.wd / 2;
+	sc->set.proj.half_hg = sc->set.proj.hg / 2;
 }
