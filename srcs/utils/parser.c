@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 17:46:08 by agiraude          #+#    #+#             */
-/*   Updated: 2021/01/21 15:36:32 by agiraude         ###   ########.fr       */
+/*   Updated: 2021/01/22 12:42:01 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,6 @@ int		parse_file(t_scene *sc, char *path)
 	}
 	free(line);
 	if (check_map(sc) == 0)
-	{
-		error_set(FILE_ERROR, "map not closed");
 		return (0);
-	}
 	return (1);
 }
