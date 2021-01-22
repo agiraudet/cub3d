@@ -1,4 +1,4 @@
-R 640 480
+R 100 100
 
 NO ./tex/stone_bricks.xpm
 SO ./tex/smoker_bottom.xpm
